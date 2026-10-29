@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { register, str, int, bool, arr } from './common.mjs';
+import { resolveWin } from '../util.mjs';
 import { Project, findProjectFile } from '../project.mjs';
 import {
   parseDep, parseCompilerDep, buildGraph, impacted, scanIncludes, depFilePath, uv4Stamp, uv4TimeStamp, uv4TimeStampHex, stampHex, parseDefines,
@@ -97,16 +98,16 @@ export function registerDepTools(ctx) {
       const pr = new Project(findProjectFile(args.project));
       const t = pr.target(args.target) || pr.targets()[0];
       if (!t) return { ok: false, error: 'no target' };
-      const outDir = path.resolve(pr.dir, t.outputDirectory || '.');
+      const outDir = resolveWin(pr.dir, t.outputDirectory || '.');
       const files = pr.files(t.name);
       const all = [...files.groups.flatMap(g => g.files), ...files.loose].filter(f => [1, 2, 8].includes(f.type));
-      const incDirs = String(t.c.includePath || '').split(';').filter(Boolean).map(d => path.resolve(pr.dir, d));
+      const incDirs = String(t.c.includePath || '').split(';').filter(Boolean).map(d => resolveWin(pr.dir, d));
       // Include closure search path: project includes + the target's RTE device include
       // (resolved from the pack, live install or bundled fixture).
       const scanDirs = [...incDirs, ...rteIncludeDirs(ctx, t)];
       const entries = [];
       for (const f of all) {
-        const abs = path.resolve(pr.dir, f.filePath || '');
+        const abs = resolveWin(pr.dir, f.filePath || '');
         const dep = objBase(outDir, f.name) + '.d';
         const item = { file: abs, depFile: fs.existsSync(dep) ? dep : null };
         if (!item.depFile && f.type !== 2 && args.rescan !== false && fs.existsSync(abs)) {
@@ -146,14 +147,14 @@ export function registerDepTools(ctx) {
     handler: async (args) => {
       const pr = new Project(findProjectFile(args.project));
       const t = pr.target(args.target) || pr.targets()[0];
-      const outDir = path.resolve(pr.dir, t.outputDirectory || '.');
+      const outDir = resolveWin(pr.dir, t.outputDirectory || '.');
       const files = pr.files(t.name);
       const all = [...files.groups.flatMap(g => g.files), ...files.loose].filter(f => [1, 2, 8].includes(f.type));
-      const incDirs = String(t.c.includePath || '').split(';').filter(Boolean).map(d => path.resolve(pr.dir, d));
+      const incDirs = String(t.c.includePath || '').split(';').filter(Boolean).map(d => resolveWin(pr.dir, d));
       const rteDirs = rteIncludeDirs(ctx, t);
       const scanDirs = [...incDirs, ...rteDirs];
       const entries = all.map(f => {
-        const abs = path.resolve(pr.dir, f.filePath || '');
+        const abs = resolveWin(pr.dir, f.filePath || '');
         const dep = objBase(outDir, f.name) + '.d';
         const item = { file: abs, depFile: fs.existsSync(dep) ? dep : null };
         if (!item.depFile && fs.existsSync(abs)) {
@@ -170,9 +171,9 @@ export function registerDepTools(ctx) {
       });
       const changedAbs = (args.changed || []).map(p => (path.isAbsolute(p) ? path.normalize(p) : path.resolve(process.cwd(), p)));
       const g = buildGraph(pr.dir, entries, {});
-      const r = impacted(g, changedAbs, all.map(f => path.resolve(pr.dir, f.filePath || '')));
+      const r = impacted(g, changedAbs, all.map(f => resolveWin(pr.dir, f.filePath || '')));
       // A changed translation unit is always recompiled, even when nothing includes it.
-      const roots = new Set(all.map(f => path.resolve(pr.dir, f.filePath || '').toLowerCase()));
+      const roots = new Set(all.map(f => resolveWin(pr.dir, f.filePath || '').toLowerCase()));
       const recompile = [...new Set([...r.needCompile, ...r.seeds.filter(p => roots.has(p.toLowerCase()))])];
       return { ok: true, project: pr.file, target: t.name, changed: args.changed, seeds: r.seeds, affectedTotal: r.affected.length, recompile, unknownChanged: r.unknownChanged, scannedIncludes: r.affected.length, note: 'recompile lists the translation units of the target that must be rebuilt (changed sources and sources including changed headers)' };
     },
@@ -193,7 +194,7 @@ export function registerDepTools(ctx) {
         const pr = new Project(findProjectFile(args.project));
         const t = pr.target(args.target) || pr.targets()[0];
         if (t) {
-          if (!inc.length) inc = String(t.c.includePath || '').split(';').filter(Boolean).map(d => path.resolve(pr.dir, d));
+          if (!inc.length) inc = String(t.c.includePath || '').split(';').filter(Boolean).map(d => resolveWin(pr.dir, d));
           defines = parseDefines(t.c.define);
         }
       }
@@ -213,7 +214,7 @@ export function registerDepTools(ctx) {
     handler: async (args) => {
       const pr = new Project(findProjectFile(args.project));
       const t = pr.target(args.target) || pr.targets()[0];
-      const outDir = path.resolve(pr.dir, t.outputDirectory || '.');
+      const outDir = resolveWin(pr.dir, t.outputDirectory || '.');
       const target = t.name;
       const files = pr.files(target);
       const all = [...files.groups.flatMap(g => g.files), ...files.loose].filter(f => [1, 2, 8].includes(f.type));
@@ -235,7 +236,7 @@ export function registerDepTools(ctx) {
       const buildNumber = uvisionBuildNumber(ctx.install && ctx.install.uvisionVersion);
       const includes = new Set();
       for (const f of all) {
-        const abs = path.resolve(pr.dir, f.filePath || '');
+        const abs = resolveWin(pr.dir, f.filePath || '');
         const tool = f.type === 2 ? 'armasm' : 'armcc';
         const base = objBase(outDir, f.name);
         const obj = base + '.o';
@@ -282,7 +283,7 @@ export function registerDepTools(ctx) {
     handler: async (args) => {
       const pr = new Project(findProjectFile(args.project));
       const t = pr.target(args.target) || pr.targets()[0];
-      const outDir = path.resolve(pr.dir, t.outputDirectory || '.');
+      const outDir = resolveWin(pr.dir, t.outputDirectory || '.');
       const files = pr.files(t.name);
       const all = [...files.groups.flatMap(g => g.files), ...files.loose].filter(f => [1, 2, 8].includes(f.type));
       const sel = args.file ? all.filter(f => path.basename(f.filePath).toLowerCase() === path.basename(args.file).toLowerCase()) : all;
@@ -299,7 +300,7 @@ export function registerDepTools(ctx) {
       });
       const objs = all.map(f => `"${objBase(outDir, f.name)}.o"`).join(' ');
       const sct = path.join(outDir, `${t.outputName}.sct`);
-      const link = `armlink --cpu ${(/CPUTYPE\("([^"]+)"\)/.exec(t.cpu) || [, 'Cortex-M3'])[1]} ${objs} --scatter "${sct}" --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols --info sizes --info totals --info unused --info veneers --list "${path.join(path.resolve(pr.dir, t.listingPath || '.'), t.outputName + '.map')}" -o "${path.join(outDir, t.outputName + '.axf')}"`;
+      const link = `armlink --cpu ${(/CPUTYPE\("([^"]+)"\)/.exec(t.cpu) || [, 'Cortex-M3'])[1]} ${objs} --scatter "${sct}" --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols --info sizes --info totals --info unused --info veneers --list "${path.join(resolveWin(pr.dir, t.listingPath || '.'), t.outputName + '.map')}" -o "${path.join(outDir, t.outputName + '.axf')}"`;
       return { ok: true, project: pr.file, target: t.name, compile: cmds, link, scatter: sct, macros: t.c.define ? parseDefines(t.c.define) : [] };
     },
   });

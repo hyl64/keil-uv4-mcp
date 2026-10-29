@@ -312,7 +312,7 @@ export function registerProjectTools(ctx) {
       const issues = [];
       const files = pr.files(t.name);
       const all = [...files.groups.flatMap(g => g.files), ...files.loose];
-      const missing = all.filter(f => !fs.existsSync(path.resolve(pr.dir, f.filePath || '')));
+      const missing = all.filter(f => !fs.existsSync(resolveWin(pr.dir, f.filePath || '')));
       if (all.length === 0) issues.push({ level: 'warning', code: 'NO_SOURCES', message: 'target has no source files' });
       if (missing.length) issues.push({ level: 'error', code: 'FILE_MISSING', message: `${missing.length} source file(s) missing`, files: missing.map(f => f.filePath) });
       const asm = all.filter(f => f.type === 2);
