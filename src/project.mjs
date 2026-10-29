@@ -1,5 +1,6 @@
 // project.mjs — .uvprojx / .uvproj / .uvmpw model: read, query, edit; XML-level fidelity.
 import fs from 'node:fs';
+import { resolveWin } from './util.mjs';
 import path from 'node:path';
 import {
   loadXmlFile, childElem, childElems, childPath, textOf, findAll, setTextFmt,
@@ -192,7 +193,7 @@ export class Project {
   allFilePaths(targetName) {
     const f = this.files(targetName);
     if (!f) return [];
-    return [...f.groups.flatMap(g => g.files), ...f.loose].map(x => path.resolve(this.dir, x.filePath));
+    return [...f.groups.flatMap(g => g.files), ...f.loose].map(x => resolveWin(this.dir, x.filePath));
   }
 
   // ---- edits ----------------------------------------------------------------

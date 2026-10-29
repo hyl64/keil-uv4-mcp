@@ -14,10 +14,11 @@
 // Keil's IDE marks out-of-date files from the F/I lists and the object timestamps,
 // so a faithful dependency engine must record exactly the same include closure.
 import fs from 'node:fs';
+import { resolveWin } from './util.mjs';
 import path from 'node:path';
 
 export function depFilePath(projectFile, targetName, outputDir) {
-  const dir = path.resolve(path.dirname(projectFile), outputDir || '.');
+  const dir = resolveWin(path.dirname(projectFile), outputDir || '.');
   const base = path.basename(projectFile, path.extname(projectFile));
   return { dir, file: path.join(dir, `${base}_${String(targetName).replace(/[\\/:*?"<>|]/g, '_')}.dep`) };
 }
@@ -93,16 +94,16 @@ export function parseCompilerDep(text) {
 export function buildGraph(projectDir, fileEntries, options = {}) {
   const nodes = new Map();
   const add = (p) => {
-    const abs = path.isAbsolute(p) ? path.normalize(p) : path.resolve(projectDir, p);
+    const abs = resolveWin(projectDir, p);
     if (!nodes.has(abs)) { let st = null; try { st = fs.statSync(abs); } catch {} nodes.set(abs, { path: abs, hash: st ? uv4Stamp(st.mtimeMs) : null, mtimeMs: st ? st.mtimeMs : null, size: st ? st.size : null, exists: !!st, deps: new Set(), usedBy: new Set() }); }
     return nodes.get(abs);
   };
   const resolved = fileEntries.map(f => {
     const obj = typeof f === 'string' ? { file: f } : f;
     if (!obj || !obj.file) return null;
-    const file = path.isAbsolute(obj.file) ? path.normalize(obj.file) : path.resolve(projectDir, obj.file);
+    const file = resolveWin(projectDir, obj.file);
     let depFile = obj.depFile;
-    if (depFile && !path.isAbsolute(depFile)) depFile = path.resolve(projectDir, depFile);
+    if (depFile && !path.isAbsolute(depFile)) depFile = resolveWin(projectDir, depFile);
     return { file, depFile: depFile || null };
   }).filter(Boolean);
   for (const f of resolved) {
@@ -130,7 +131,7 @@ export function buildGraph(projectDir, fileEntries, options = {}) {
 export function impacted(graph, changedFiles, roots) {
   const byPath = new Map(graph.nodes.map(n => [n.path.toLowerCase(), n]));
   const seeds = changedFiles.map(p => {
-    const abs = path.isAbsolute(p) ? path.normalize(p) : path.resolve(graph.projectDir, p);
+    const abs = resolveWin(graph.projectDir, p);
     return byPath.get(abs.toLowerCase()) || null;
   }).filter(Boolean);
   const affected = new Set();
@@ -147,7 +148,7 @@ export function impacted(graph, changedFiles, roots) {
   const rootSet = new Set((roots || []).map(r => (path.isAbsolute(r) ? path.normalize(r) : path.resolve(graph.projectDir, r)).toLowerCase()));
   const needCompile = [...affected].filter(p => rootSet.has(p.toLowerCase()));
   const unknownChanged = changedFiles.filter((p) => {
-    const abs = path.isAbsolute(p) ? path.normalize(p) : path.resolve(graph.projectDir, p);
+    const abs = resolveWin(graph.projectDir, p);
     return !byPath.has(abs.toLowerCase());
   });
   return { seeds: seeds.map(s => s.path), affected: [...affected], needCompile, unknownChanged };
@@ -183,7 +184,7 @@ export function scanIncludes(file, includeDirs, defines = [], maxDepth = 40) {
 }
 
 function resolveInclude(inc, fromDir, dirs) {
-  const cands = [path.resolve(fromDir, inc), ...dirs.map(d => path.resolve(d, inc))];
+  const cands = [resolveWin(fromDir, inc), ...dirs.map(d => resolveWin(d, inc))];
   for (const c of cands) { try { if (fs.statSync(c).isFile()) return c; } catch {} }
   return null;
 }

@@ -5,6 +5,27 @@ import path from 'node:path';
 export function ok(data) { return { ok: true, ...data }; }
 export function fail(message, extra) { return { ok: false, error: message, ...(extra || {}) }; }
 
+/**
+ * Resolve a µVision path that was written on Windows.
+ *
+ * Projects store `.\Objects\`, `..\CMSIS`, `C:\Keil_v5\...`. On POSIX, path.resolve() keeps
+ * the backslashes as literal filename characters, so the file is never found
+ * ("image not found: …/.\Objects\/main.axf"). Fold separators to '/', drop a leading './',
+ * then resolve against the base. Drive-letter paths stay absolute on Windows; on POSIX they
+ * simply do not exist, which is the honest outcome.
+ */
+export function resolveWin(base, ...parts) {
+  let cur = String(base === undefined || base === null ? '.' : base).replace(/\\/g, '/');
+  for (const raw of parts) {
+    if (raw === undefined || raw === null || raw === '') continue;
+    let s = String(raw).replace(/\\/g, '/');
+    if (/^[A-Za-z]:\//.test(s) || s.startsWith('/')) { cur = s; continue; }
+    s = s.replace(/^\.\//, '');
+    cur = cur.replace(/\/+$/, '') + '/' + s;
+  }
+  return path.normalize(cur);
+}
+
 export function guard(fn) {
   return async (...args) => {
     try { return await fn(...args); }

@@ -3,6 +3,21 @@
 所有重要变更记录在此文件。格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.2.1] — 2026-10-29
+
+跨平台修复：Linux/macOS 上读工程、找产物、分析依赖现在能跑通（CI 首次在 Ubuntu 上暴露）。
+
+### Fixed
+
+- **Windows 风格路径在 POSIX 上失效**：工程里存的是 `.\Objects\`、`..\CMSIS`，
+  `path.resolve()` 在 Linux 把反斜杠当文件名字符，导致 `memory_usage` 报
+  `image not found: …/.\Objects\/main.axf`、`project_validate` 误报头文件缺失、
+  `dep_impact` 找不到变更单元。新增 `util.resolveWin()` 统一折叠分隔符与 `./` 前缀，
+  并在 `project.mjs`、`deps.mjs`、`tools/project.mjs`、`tools/image.mjs` 的路径解析处替换
+  （共 19 处）。
+- 工程文件里的 `C:\...` 绝对路径在 POSIX 上仍按"不存在"处理——这是如实结果，不再拼出
+  带反斜杠的伪路径。
+
 ## [1.2.0] — 2026-10-29
 
 面向初学者：把"缺库/版本不对"从人工猜变成一条命令，并且说人话。

@@ -1,6 +1,7 @@
 // tools/image.mjs — ELF/MAP/HEX inspection and memory utilisation.
 import fs from 'node:fs';
 import path from 'node:path';
+import { resolveWin } from '../util.mjs';
 import { register, str, int, bool } from './common.mjs';
 import { readElf, readMap, analyzeHex, memoryUsage } from '../image.mjs';
 import { Project, findProjectFile } from '../project.mjs';
@@ -8,8 +9,8 @@ import { Project, findProjectFile } from '../project.mjs';
 function resolveInProject(project, rel) {
   const pr = new Project(findProjectFile(project));
   const t = pr.targets()[0];
-  const dir = path.resolve(pr.dir, (t && t.outputDirectory) || '.');
-  return { pr, t, file: path.resolve(dir, rel) };
+  const dir = resolveWin(pr.dir, (t && t.outputDirectory) || '.');
+  return { pr, t, file: resolveWin(dir, rel) };
 }
 
 export function registerImageTools(ctx) {
@@ -44,7 +45,7 @@ export function registerImageTools(ctx) {
       if (!file && args.project) {
         const pr = new Project(findProjectFile(args.project));
         const t = pr.targets()[0];
-        file = path.resolve(pr.dir, t.listingPath || '.', (args.name || t.outputName) + '.map');
+        file = resolveWin(pr.dir, t.listingPath || '.', (args.name || t.outputName) + '.map');
       }
       if (!file) return { ok: false, error: 'file or project+name required' };
       return readMap(path.resolve(file));
@@ -60,7 +61,7 @@ export function registerImageTools(ctx) {
       if (!file && args.project) {
         const pr = new Project(findProjectFile(args.project));
         const t = pr.targets()[0];
-        file = path.resolve(pr.dir, t.outputDirectory || '.', (args.name || t.outputName) + '.hex');
+        file = resolveWin(pr.dir, t.outputDirectory || '.', (args.name || t.outputName) + '.hex');
       }
       return analyzeHex(path.resolve(file));
     },
@@ -73,7 +74,7 @@ export function registerImageTools(ctx) {
     handler: async (args) => {
       const pr = new Project(findProjectFile(args.project));
       const t = pr.target(args.target) || pr.targets()[0];
-      const file = args.file ? path.resolve(args.file) : path.resolve(pr.dir, t.outputDirectory || '.', t.outputName + '.axf');
+      const file = args.file ? path.resolve(args.file) : resolveWin(pr.dir, t.outputDirectory || '.', t.outputName + '.axf');
       if (!fs.existsSync(file)) return { ok: false, error: `image not found: ${file}` };
       const elf = readElf(file);
       if (!elf.ok) return elf;
@@ -92,7 +93,7 @@ export function registerImageTools(ctx) {
     handler: async (args) => {
       const pr = new Project(findProjectFile(args.project));
       const t = pr.target(args.target) || pr.targets()[0];
-      const dir = path.resolve(pr.dir, t.outputDirectory || '.');
+      const dir = resolveWin(pr.dir, t.outputDirectory || '.');
       const cands = [path.join(dir, `co-arm_${t.name}.h`), path.join(dir, `co-arm_${t.name}.hpp`), path.join(dir, `co-arm_${t.outputName}.h`)];
       const file = args.file ? path.resolve(args.file) : cands.find(f => fs.existsSync(f));
       if (!file || !fs.existsSync(file)) return { ok: false, error: 'symbol file not found; run uv4_symbols first', searched: cands };

@@ -1,6 +1,7 @@
 // tools/project.mjs — .uvprojx/.uvproj/.uvmpw model tools.
 import fs from 'node:fs';
 import path from 'node:path';
+import { resolveWin } from '../util.mjs';
 import { register, str, int, bool, arr, enumOf } from './common.mjs';
 import { Project, findProjectFile, readMultiProject, multiProjectTargets, guessFileType } from '../project.mjs';
 import { deviceToTargetOptions, findDevices, listPackCatalog, findComponents, discoverPacks } from '../packs.mjs';
@@ -328,7 +329,7 @@ export function registerProjectTools(ctx) {
       const missingPacks = packIds.filter(id => !installed.has(id));
       if (missingPacks.length) issues.push({ level: 'error', code: 'RTE_PACK_MISSING', message: `RTE components reference uninstalled packs: ${missingPacks.join(', ')}` });
       const includes = String(t.c.includePath || '').split(';').filter(Boolean);
-      const missingIncludes = includes.filter(i => !fs.existsSync(path.resolve(pr.dir, i)));
+      const missingIncludes = includes.filter(i => !fs.existsSync(resolveWin(pr.dir, i)));
       if (missingIncludes.length) issues.push({ level: 'warning', code: 'INCLUDE_MISSING', message: `include directories do not exist: ${missingIncludes.join('; ')}` });
       return {
         ok: issues.filter(i => i.level === 'error').length === 0,

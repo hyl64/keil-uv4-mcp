@@ -1,6 +1,6 @@
 {
   "name": "keil-uv4-mcp",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Standalone Keil uVision (UV4) toolkit and MCP server, reconstructed from UV4.exe: project model editing, dependency analysis, CMSIS-Pack device DB, image/map/hex analysis, UVSOCK remote control and batch generation. Runs with no Keil installation (bundled data snapshot) and gains full build/flash capability when one is present.",
   "type": "module",
   "main": "src/server.mjs",
