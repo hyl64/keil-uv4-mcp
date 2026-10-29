@@ -1,0 +1,1445 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Project">
+    <xs:complexType>      
+      <xs:sequence>
+        <xs:element name="SchemaVersion" type="xs:string" />
+        <!--Header string-->
+        <xs:element name="Header" type="xs:string" />
+        <xs:element minOccurs="1" maxOccurs="1" name ="Targets">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="1" maxOccurs="unbounded" name="Target"> <!--specification of target options-->
+                <xs:complexType>
+                  <xs:sequence> <!--at least one target each project-->
+                    <xs:element name="TargetName" type="xs:string"/>
+                    <xs:element name="ToolsetNumber" type="HexaDecimal"></xs:element>
+                    <xs:element name="ToolsetName" type="xs:string"></xs:element>
+                    <xs:element name="pArmCC" type="xs:string"/>
+                    <xs:element name="pCCUsed" type="xs:string"/>
+                    <xs:element name="uAC6" type="fourBits"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="TargetOption"> <!--definition of target options-->
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element ref="TargetCommonOption"/>
+                          <xs:element ref="CommonProperty"/>
+                          <xs:element ref="DllOption"/>
+                          <xs:element ref="DebugOption"/>
+                          <xs:element ref="Utilities"/>
+                          <xs:choice>
+                            <xs:element name="Target166">
+                              <xs:complexType>
+                                <xs:sequence>
+                                  <xs:element ref="Target166Misc"></xs:element>
+                                  <xs:element ref="C166"></xs:element>
+                                  <xs:element ref="Ec166"></xs:element>
+                                  <xs:element ref="A166"></xs:element>
+                                  <xs:element ref="L166"></xs:element>
+                                </xs:sequence>
+                              </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Target51">
+                              <xs:complexType>
+                                <xs:sequence>
+                                  <xs:element ref="Target51Misc"></xs:element>
+                                  <xs:choice>
+                                    <xs:element ref="C251"></xs:element>
+                                    <xs:element ref="C51"></xs:element>
+                                  </xs:choice>
+                                  <xs:element ref="Ax51"></xs:element>
+                                  <xs:element ref="Lx51"></xs:element>
+                                </xs:sequence>
+                              </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Target251">
+                              <xs:complexType>
+                                <xs:sequence>
+                                  <xs:element ref="Target251Misc"></xs:element>
+                                  <xs:element ref="C251"></xs:element>
+                                  <xs:element ref="Ax51"></xs:element>
+                                  <xs:element ref="Lx51"></xs:element>
+                                </xs:sequence>
+                              </xs:complexType>
+                            </xs:element>
+                            <xs:element name="TargetArm">
+                              <xs:complexType>
+                                <xs:sequence>
+                                  <xs:element ref="ArmMisc"></xs:element>
+                                  <xs:element ref="Carm"></xs:element>
+                                  <xs:element ref="Aarm"></xs:element>
+                                  <xs:element ref="LDarm"></xs:element>
+                                </xs:sequence>
+                              </xs:complexType>
+                            </xs:element>
+                            <xs:element name="TargetArmAds">
+                              <xs:complexType>
+                                <xs:sequence>
+                                  <xs:element ref="ArmAdsMisc"></xs:element>
+                                  <xs:element ref="Cads"></xs:element>
+                                  <xs:element ref="Aads"></xs:element>
+                                  <xs:element ref="LDads"></xs:element>
+                                </xs:sequence>
+                              </xs:complexType>
+                            </xs:element>
+                          </xs:choice>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Groups">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="1" maxOccurs="unbounded" name="Group"> <!--1 or more groups contained in the target-->
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="GroupName" type="xs:string"/>
+                                <xs:element minOccurs="0" maxOccurs="1" name="GroupOption">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element ref="CommonProperty" />
+                                      <xs:choice>
+                                        <xs:element name="Group51">
+                                          <xs:complexType>
+                                            <xs:sequence>
+                                              <xs:choice>
+                                                <xs:element ref="C251" />
+                                                <xs:element ref="C51" />
+                                              </xs:choice>
+                                              <xs:element ref="Ax51" />
+                                            </xs:sequence>
+                                          </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="Group251">
+                                          <xs:complexType>
+                                            <xs:sequence>
+                                              <xs:element ref="C251" />
+                                              <xs:element ref="Ax51" />
+                                            </xs:sequence>
+                                          </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="Group166">
+                                          <xs:complexType>
+                                            <xs:sequence>
+                                              <xs:element ref="C166" />
+                                              <xs:element ref="Ec166" />
+                                              <xs:element ref="A166" />
+                                            </xs:sequence>
+                                          </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="GroupArm">
+                                          <xs:complexType>
+                                            <xs:sequence>
+                                              <xs:element ref="Carm" />
+                                              <xs:element ref="Aarm" />
+                                            </xs:sequence>
+                                          </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="GroupArmAds">
+                                          <xs:complexType>
+                                            <xs:sequence>
+                                              <xs:element ref="Cads" />
+                                              <xs:element ref="Aads" />
+                                            </xs:sequence>
+                                          </xs:complexType>
+                                        </xs:element>
+                                      </xs:choice>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                                <xs:element name="Files" minOccurs="0" maxOccurs="1">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element minOccurs="1" maxOccurs="unbounded" name="File">
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element name="FileName" type="xs:string"/>
+                                            <xs:element name="FileType" type="xs:byte"/>
+                                            <xs:element name="FilePath" type="xs:string"/>
+                                            <xs:element minOccurs="0" maxOccurs="1" name="FileOption">
+                                              <xs:complexType>
+                                                <xs:sequence>
+                                                  <xs:element ref="CommonProperty" />
+                                                  <xs:choice>
+                                                    <xs:element name="File51">
+                                                      <xs:complexType>
+                                                        <xs:choice>
+                                                          <xs:element minOccurs="0" maxOccurs="1" ref="C251" />
+                                                          <xs:element minOccurs="0" maxOccurs="1" ref="C51" />
+                                                          <xs:element minOccurs="0" maxOccurs="1" ref="Ax51" />
+                                                        </xs:choice>
+                                                      </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="File251">
+                                                      <xs:complexType>
+                                                        <xs:choice>
+                                                          <xs:element minOccurs="0" maxOccurs="1" ref="C251" />
+                                                          <xs:element minOccurs="0" maxOccurs="1" ref="Ax51" />
+                                                        </xs:choice>
+                                                      </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="File166">
+                                                      <xs:complexType>
+                                                        <xs:choice>
+                                                          <xs:element minOccurs="0" maxOccurs="1" ref="C166" />
+                                                          <xs:element minOccurs="0" maxOccurs="1" ref="Ec166" />
+                                                          <xs:element minOccurs="0" maxOccurs="1" ref="A166" />
+                                                        </xs:choice>
+                                                      </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="FileArm">
+                                                      <xs:complexType>
+                                                        <xs:choice>
+                                                          <xs:element minOccurs="0" maxOccurs="1" ref="Carm" />
+                                                          <xs:element minOccurs="0" maxOccurs="1" ref="Aarm" />
+                                                        </xs:choice>
+                                                      </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="FileArmAds">
+                                                      <xs:complexType>
+                                                        <xs:choice>
+                                                          <xs:element minOccurs="0" maxOccurs="1" ref="Cads" />
+                                                          <xs:element minOccurs="0" maxOccurs="1" ref="Aads" />
+                                                        </xs:choice>
+                                                      </xs:complexType>
+                                                    </xs:element>
+                                                  </xs:choice>
+                                                </xs:sequence>
+                                              </xs:complexType>
+                                            </xs:element>
+                                          </xs:sequence>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                              </xs:element>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <!-- RTE data -->
+        <xs:element name="RTE" nillable="true" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:all>
+              <xs:element name="gpdscs"     type="GpdscContainerType" minOccurs="0"/>
+              <xs:element name="packages"   type="PackagesType"       minOccurs="0"/>
+              <xs:element name="apis"       type="ApisType"           minOccurs="0"/>
+              <xs:element name="components" type="ComponentsType"     minOccurs="0"/>
+              <xs:element name="files"      type="FilesType"          minOccurs="0"/>
+              <xs:element name="boards"      type="BoardsType"          minOccurs="0"/>
+            </xs:all>
+            <xs:attribute name="name" type="xs:string" use="optional"/>
+            <!-- RTE version for future use-->
+            <xs:attribute name="version" type="VersionType" use="optional"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!--common options specific to each target-->
+  <xs:element name="TargetCommonOption">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Device" type="xs:string" />
+        <xs:element name="Vendor" type="xs:string" />
+        <xs:element name="PackID"  type="xs:string" maxOccurs="1" minOccurs="0"/>
+        <xs:element name="PackURL" type="xs:string" maxOccurs="1" minOccurs="0"/>
+        <xs:element name="Cpu" type="xs:string" />
+
+        <xs:element name="FlashUtilSpec" type="xs:string" />
+        <xs:element name="StartupFile" type="xs:string" />
+        <xs:element name="FlashDriverDll" type="xs:string" />
+        <xs:element name="DeviceId" type="xs:string" />
+        
+        <xs:element name="RegisterFile" type="xs:string" />
+        <xs:element name="MemoryEnv" type="xs:string" />
+        <xs:element name="Cmp" type="xs:string" />
+        <xs:element name="Asm" type="xs:string" />
+        <xs:element name="Linker" type="xs:string" />
+        <xs:element name="OHString" type="xs:string" />
+        
+        <xs:element name="InfinionOptionDll" type="xs:string" />
+        <xs:element name="SLE66CMisc" type="xs:string" />
+        <xs:element name="SLE66AMisc" type="xs:string" />
+        <xs:element name="SLE66LinkerMisc" type="xs:string" />
+
+        <!--05.10.2010, optional SFDFile-->
+        <xs:element minOccurs="0" maxOccurs="1" name="SFDFile" type="xs:string"/>
+
+        <xs:element name="UseEnv" type="xs:unsignedByte"/>
+        <xs:element name="BinPath" type="xs:string" />
+        <xs:element name="IncludePath" type="xs:string" />
+        <xs:element name="LibPath" type="xs:string" />
+        <xs:element name="RegisterFilePath" type="xs:string" />
+        <xs:element name="DBRegisterFilePath" type="xs:string" />
+
+        <xs:element name="TargetStatus">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Error" type="switcher" />
+              <xs:element name="ExitCodeStop" type="switcher" />
+              <xs:element name="ButtonStop" type="switcher" />
+              <xs:element name="NotGenerated" type="switcher" />
+              <xs:element name="InvalidFlash" type="switcher" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        
+        <xs:element name="OutputDirectory" type="xs:string" />
+        <xs:element name="OutputName" type="xs:string" />
+        
+        <xs:element name="CreateExecutable" type="switcher" />
+        <xs:element name="CreateLib" type="switcher" />
+        <xs:element name="CreateHexFile" type="switcher" />
+        <xs:element name="DebugInformation" type="switcher" />
+        <xs:element name="BrowseInformation" type="switcher" />
+        <xs:element name="ListingPath" type="xs:string" />
+        <xs:element name="HexFormatSelection" type="xs:unsignedByte" />
+        <xs:element name="Merge32K" type="switcher" />
+        
+        <xs:element name="CreateBatchFile" type="switcher" />
+        <xs:element name="BeforeCompile" type="BeforeCompileType"/>
+        
+        <xs:element name="BeforeMake" type="UserProgSettings"/>
+        <xs:element name="AfterMake" type="UserProgSettings2"/>
+        <xs:element name="SelectedForBatchBuild" type="switcher" />
+        <xs:element name="SVCSIdString" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DllOption">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="SimDllName" type="xs:string" />
+        <xs:element name="SimDllArguments" type="xs:string" />
+        <xs:element name="SimDlgDll" type="xs:string" />
+        <xs:element name="SimDlgDllArguments" type="xs:string" />
+        <xs:element name="TargetDllName" type="xs:string" />
+        <xs:element name="TargetDllArguments" type="xs:string" />
+        <xs:element name="TargetDlgDll" type="xs:string" />
+        <xs:element name="TargetDlgDllArguments" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DebugOption">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="OPTHX">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="HexSelection" type="xs:unsignedByte" />
+              <xs:element name="HexRangeLowAddress" type="xs:unsignedInt" />
+              <xs:element name="HexRangeHighAddress" type="xs:unsignedInt" />
+              <xs:element name="HexOffset" type="xs:unsignedInt"/>
+              <xs:element name="Oh166RecLen" type="xs:unsignedInt" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Simulator">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="UseSimulator" type="switcher" />
+              <xs:element name="LoadApplicationAtStartup" type="switcher" />
+              <xs:element name="RunToMain" type="switcher" />
+              <xs:element name="RestoreBreakpoints" type="switcher" />
+              <xs:element name="RestoreWatchpoints" type="switcher" />
+              <xs:element name="RestoreMemoryDisplay" type="switcher" />
+              <xs:element name="RestoreFunctions" type="switcher" />
+              <xs:element name="RestoreToolbox" type="switcher" />
+              <xs:element name="LimitSpeedToRealTime" type="switcher" />
+              <xs:element minOccurs="0" maxOccurs="1" name="RestoreSysVw" type="switcher" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Target">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="UseTarget" type="switcher" />
+              <xs:element name="LoadApplicationAtStartup" type="switcher" />
+              <xs:element name="RunToMain" type="switcher" />
+              <xs:element name="RestoreBreakpoints" type="switcher" />
+              <xs:element name="RestoreWatchpoints" type="switcher" />
+              <xs:element name="RestoreMemoryDisplay" type="switcher" />
+              <xs:element name="RestoreFunctions" type="switcher" />
+              <xs:element name="RestoreToolbox" type="switcher" />
+			  <!-- RestoreTracepoints optional for backwards compatibility -->
+              <xs:element minOccurs="0" maxOccurs="1" name="RestoreTracepoints" type="switcher" />
+              <xs:element minOccurs="0" maxOccurs="1" name="RestoreSysVw" type="switcher" />
+              <xs:element minOccurs="0" maxOccurs="1" name="UsePdscDebugDescription" type="switcher" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="RunDebugAfterBuild" type="switcher" />
+        <xs:element name="TargetSelection" type="xs:integer"/>
+        <xs:element name="SimDlls">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CpuDll" type="xs:string"/>
+              <xs:element name="CpuDllArguments" type="xs:string"/>
+              <xs:element name="PeripheralDll" type="xs:string"/>
+              <xs:element name="PeripheralDllArguments" type="xs:string"/>
+              <xs:element name="InitializationFile" type="xs:string"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="TargetDlls">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CpuDll" type="xs:string"/>
+              <xs:element name="CpuDllArguments" type="xs:string"/>
+              <xs:element name="PeripheralDll" type="xs:string"/>
+              <xs:element name="PeripheralDllArguments" type="xs:string"/>
+              <xs:element name="InitializationFile" type="xs:string"/>
+              <xs:element name="Driver" type="xs:string"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Utilities">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Flash1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="UseTargetDll" type="switcher" /> <!--Use target dll for flash-->
+              <xs:element name="UseExternalTool" type="switcher" /> <!--use 3rd party tool for flash-->
+              <xs:element name="RunIndependent" type="switcher" />
+              <xs:element name="UpdateFlashBeforeDebugging" type="switcher" />
+              <xs:element name="Capability" type="xs:integer" />
+              <xs:element name="DriverSelection" type="xs:integer" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element> <!--Flags-->
+        <xs:element name="bUseTDR" type="xs:integer"/> <!--TargetDriver-->
+        <xs:element name="Flash2" type="xs:string"/> <!--TargetDriver-->
+        <xs:element name="Flash3" type="xs:string"/> <!--ExternalTool-->
+        <xs:element name="Flash4" type="xs:string"/> <!--Inifile-->
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!--options specific to target ArmAds-->
+  <xs:element name="ArmAdsMisc">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="GenerateListings" type="switcher" />
+        <xs:element name="asHll" type="switcher" />
+        <xs:element name="asAsm" type="switcher" />
+        <xs:element name="asMacX" type="switcher" />
+        <xs:element name="asSyms" type="switcher" />
+        <xs:element name="asFals" type="switcher" />
+        <xs:element name="asDbgD" type="switcher" />
+        <xs:element name="asForm" type="switcher" />
+        <xs:element name="ldLst" type="switcher" />
+        <xs:element name="ldmm" type="switcher" />
+        <xs:element name="ldXref" type="switcher" />
+        <xs:element name="BigEnd" type="switcher" />
+
+        <xs:element name="AdsALst" type="switcher" />
+        <xs:element name="AdsACrf" type="switcher" />
+        <xs:element name="AdsANop" type="switcher" />
+        <xs:element name="AdsANot" type="switcher" />
+        <xs:element name="AdsLLst" type="switcher" />
+        <xs:element name="AdsLmap" type="switcher" />
+        <xs:element name="AdsLcgr" type="switcher" />
+        <xs:element name="AdsLsym" type="switcher" />
+        <xs:element name="AdsLszi" type="switcher" />
+        <xs:element name="AdsLtoi" type="switcher" />
+        <xs:element name="AdsLsun" type="switcher" />
+        <xs:element name="AdsLven" type="switcher" />
+        <xs:element name="AdsLsxf" type="switcher" />
+        <xs:element name="RvctClst" type="switcher" />
+        <xs:element name="GenPPlst" type="switcher" />
+
+        <xs:element name="AdsCpuType" type="xs:string"/>
+        <xs:element name="RvctDeviceName" type="xs:string"/>
+
+        <xs:element name="mOS" type="xs:unsignedByte" />
+        <xs:element name="uocRom" type="switcher" />
+        <xs:element name="uocRam" type="switcher" />
+        <xs:element name="hadIROM" type="switcher" />
+        <xs:element name="hadIRAM" type="switcher" />
+        <xs:element name="hadXRAM" type="switcher" />
+        <xs:element name="uocXRam" type="switcher" />
+        <xs:element name="RvdsVP" type="sixBits" />
+        <xs:element name="RvdsCdeCp" type="xs:byte" />
+        <xs:element name="hadIRAM2" type="switcher" />
+        <xs:element name="hadIROM2" type="switcher" />
+        <xs:element name="RvdsMve" type="twoBits" />
+        <xs:element name="nBranchProt" type="threeBits" />
+
+        <xs:element name="StupSel" type="sixBits" />
+        <xs:element name="useUlib" type="switcher" />
+        <xs:element name="EndSel" type="switcher" />
+        <xs:element name="uLtcg" type="switcher" />
+        <xs:element name="nSecure" type="fourBits" />
+
+        <xs:element name="RoSelD" type="fiveBits" />
+        <xs:element name="RwSelD" type="fiveBits" />
+        <xs:element name="CodeSel" type="sixBits" />
+        <xs:element name="OptFeed" type="switcher" />
+        <xs:element name="NoZi1" type="switcher" />
+        <xs:element name="NoZi2" type="switcher" />
+        <xs:element name="NoZi3" type="switcher" />
+        <xs:element name="NoZi4" type="switcher" />
+        <xs:element name="NoZi5" type="switcher" />
+
+        <xs:element name="Ro1Chk" type="switcher" />
+        <xs:element name="Ro2Chk" type="switcher" />
+        <xs:element name="Ro3Chk" type="switcher" />
+        <xs:element name="Ir1Chk" type="switcher" />
+        <xs:element name="Ir2Chk" type="switcher" />
+        <xs:element name="Ra1Chk" type="switcher" />
+        <xs:element name="Ra2Chk" type="switcher" />
+        <xs:element name="Ra3Chk" type="switcher" />
+        <xs:element name="Im1Chk" type="switcher" />
+        <xs:element name="Im2Chk" type="switcher" />
+
+        <xs:element name="OnChipMemories">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Ocm1" type="MemoryRange"/>
+              <xs:element name="Ocm2" type="MemoryRange"/>
+              <xs:element name="Ocm3" type="MemoryRange"/>
+              <xs:element name="Ocm4" type="MemoryRange"/>
+              <xs:element name="Ocm5" type="MemoryRange"/>
+              <xs:element name="Ocm6" type="MemoryRange"/>
+              <xs:element name="IRAM" type="MemoryRange"/>
+              <xs:element name="IROM" type="MemoryRange"/>
+              <xs:element name="XRAM" type="MemoryRange"/>
+              <xs:element name="OCR_RVCT1" type="MemoryRange"/>
+              <xs:element name="OCR_RVCT2" type="MemoryRange"/>
+              <xs:element name="OCR_RVCT3" type="MemoryRange"/>
+              <xs:element name="OCR_RVCT4" type="MemoryRange"/>
+              <xs:element name="OCR_RVCT5" type="MemoryRange"/>
+              <xs:element name="OCR_RVCT6" type="MemoryRange"/>
+              <xs:element name="OCR_RVCT7" type="MemoryRange"/>
+              <xs:element name="OCR_RVCT8" type="MemoryRange"/>
+              <xs:element name="OCR_RVCT9" type="MemoryRange"/>
+              <xs:element name="OCR_RVCT10" type="MemoryRange"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="RvctStartVector" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Cads">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="interw" type="twoBits" />
+        <xs:element name="Optim" type="sevenBits" />
+        <xs:element name="oTime" type="twoBits" />
+        <xs:element name="SplitLS" type="twoBits" />
+        <xs:element name="OneElfS" type="twoBits" />
+        <xs:element name="Strict" type="twoBits" />
+        <xs:element name="EnumInt" type="twoBits" />
+        <xs:element name="PlainCh" type="twoBits" />
+        <xs:element name="Ropi" type="twoBits" />
+        <xs:element name="Rwpi" type="twoBits" />
+        <xs:element name="wLevel" type="threeBits" />
+        <xs:element name="uThumb" type="twoBits" />
+        <xs:element name="uSurpInc" type="twoBits" />
+        <xs:element name="uC99" type="twoBits" />
+        <xs:element name="uGnu" type="twoBits" />
+        <xs:element name="useXO" type="twoBits" />
+        <xs:element name="v6Lang" type="fourBits" />
+        <xs:element name="v6LangP" type="fourBits" />
+        <xs:element name="vShortEn" type="twoBits" />
+        <xs:element name="vShortWch" type="twoBits" />
+        <xs:element name="v6Lto" type="twoBits" />
+        <xs:element name="v6WtE" type="twoBits" />
+        <xs:element name="v6Rtti" type="twoBits" />
+        <xs:element name="VariousControls" type="VariousControlsType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Aads">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="interw" type="twoBits" />
+        <xs:element name="Ropi" type="twoBits" />
+        <xs:element name="Rwpi" type="twoBits" />
+        <xs:element name="thumb" type="twoBits" />
+        <xs:element name="SplitLS" type="twoBits" />
+        <xs:element name="SwStkChk" type="twoBits" />
+        <xs:element name="NoWarn" type="twoBits" />
+        <xs:element name="uSurpInc" type="twoBits" />
+        <xs:element name="uClangAs" type="fourBits" />
+        <xs:element name="ClangAsOpt" type="fourBits" />
+        <xs:element name="VariousControls" type="VariousControlsType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="LDads">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="umfTarg" type="switcher" />
+        <xs:element name="Ropi" type="switcher" />
+        <xs:element name="Rwpi" type="switcher" />
+        <xs:element name="noStLib" type="switcher" />
+        <xs:element name="RepFail" type="switcher" />
+        <xs:element name="useFile" type="switcher" />
+        <xs:element name="TextAddressRange" type="xs:string"/>
+        <xs:element name="DataAddressRange" type="xs:string"/>
+        <xs:element name="ScatterFile" type="xs:string"/>
+        <xs:element name="IncludeLibs" type="xs:string"/>
+        <xs:element name="IncludeLibsPath" type="xs:string"/>
+        <xs:element name="Misc" type="xs:string"/>
+        <xs:element name="LinkerInputFile" type="xs:string"/>
+        <xs:element name="DisabledWarnings" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!--options specific to target 166-->
+  <xs:element name="Target166Misc">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="MemoryModel" type="xs:unsignedByte" />
+        <xs:element name="RTOS" type="xs:unsignedByte" />
+        
+        <xs:element name="NearData" type="xs:unsignedShort" />
+        <xs:element name="iData" type="xs:unsignedShort" />
+        <xs:element name="sData" type="xs:unsignedShort" />
+        <xs:element name="bData" type="xs:unsignedShort" />
+        
+        <xs:element name="Mod167" type="switcher" />
+        <xs:element name="ModV2" type="switcher" />
+        <xs:element name="UseOnChipRom" type="switcher" />
+        <xs:element name="UseOnChipXramCan" type="switcher" />
+        <xs:element name="UseOnChipXram2" type="switcher" />
+        <xs:element name="NearRamMemory" type="xs:unsignedByte" />
+        <xs:element name="NearRomMemory" type="xs:unsignedByte" />
+        <xs:element name="UseIrom2" type="switcher" />
+        <xs:element name="UseIrom3" type="switcher" />
+        <xs:element name="UseXram3" type="switcher" />
+
+        <xs:element name="OnChipMemories">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Ocm1" type="MemoryRange"/>
+              <xs:element name="Ocm2" type="MemoryRange"/>
+              <xs:element name="Ocm3" type="MemoryRange"/>
+              <xs:element name="Ocm4" type="MemoryRange"/>
+              <xs:element name="Ocm5" type="MemoryRange"/>
+              <xs:element name="Ocm6" type="MemoryRange"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C166">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:element name="Optimize" type="xs:unsignedByte" />
+        <xs:element name="SpeedSize" type="xs:unsignedByte" />
+        
+        <xs:element name="RegisterColoring" type="twoBits" />
+        <xs:element name="UseStaticMemory" type="twoBits" />
+        <xs:element name="WarningLevel" type="xs:unsignedByte" />
+        <xs:element name="AliasChecking" type="twoBits" />
+        <xs:element name="VariablesInOrder" type="twoBits" />
+        <xs:element name="CharAsUnsignedChar" type="twoBits" />
+        <xs:element name="NoDppSave" type="twoBits" />
+        <xs:element name="Float64" type="twoBits" />
+        <xs:element name="SaveTempVar" type="twoBits" />
+        <xs:element name="ReorderInstruction" type="twoBits" />
+        
+        <xs:element name="VariousControls" type="VariousControlsType" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Ec166">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="WarningLevel" type="xs:unsignedByte"/>
+        <xs:element name="UnsignedChar" type="twoBits"/>
+        
+        <xs:element name="VariousControls" type="VariousControlsType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="A166">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="UseMPL" type="twoBits" />
+        <xs:element name="CaseSensitiveSymbols" type="twoBits" />
+        <xs:element name="VariousControls" type="VariousControlsType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="L166">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="UseLinkFile" type="switcher" />
+        <xs:element name="LinkerCmdFile" type="xs:string"/>
+        <xs:element name="LinkOnly" type="switcher" />
+        <xs:element name="UseTargetSet" type="switcher" />
+        <xs:element name="DppUsage" type="switcher" />
+        <xs:element name="nDataSelection" type="xs:unsignedByte" />
+        <xs:element name="nConstSelection" type="xs:unsignedByte" />
+        <xs:element name="NearDataString" type="xs:string"/>
+        <xs:element name="NearConstString" type="xs:string"/>
+        <xs:element name="iStartStopString" type="xs:string" />
+        <xs:element name="InterruptVectorAddress" type="xs:string"/>
+        <xs:element name="WarningLevel" type="xs:unsignedByte" />
+        <xs:element name="DisableWarningNumbers" type="xs:string"/>
+        <xs:element name="Assign" type="xs:string"/>
+        <xs:element name="Registerbank" type="xs:string"/>
+        <xs:element name="Reserve" type="xs:string"/>
+        <xs:element name="MiscControls" type="xs:string"/>
+        <xs:element name="UserClasses" type="xs:string"/>
+        <xs:element name="UserSection" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!--options specific to target 51-->
+  <xs:element name="Target51Misc">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="MemoryModel" type="xs:unsignedShort" />
+        <xs:element name="RTOS" type="xs:unsignedShort" />
+        <xs:element name="RomSize" type="xs:unsignedShort" />
+        <xs:element name="DataHold" type="xs:unsignedLong" />
+        <xs:element name="XDataHold" type="xs:unsignedLong" />
+        
+        <xs:element name="UseOnchipRom" type="switcher" />
+        <xs:element name="UseOnchipArithmetic" type="switcher" />
+        <xs:element name="UseMultipleDPTR" type="switcher" />
+        <xs:element name="UseOnchipXram" type="switcher" />
+        <xs:element name="HadIRAM" type="switcher" />
+        <xs:element name="HadXRAM" type="switcher" />
+        <xs:element name="HadIROM" type="switcher" />
+        <xs:element name="Moda2" type="switcher" />
+        <xs:element name="Moddp2" type="switcher" />
+        <xs:element name="Modp2" type="switcher" />
+        <xs:element name="Mod517dp" type="switcher" />
+        <xs:element name="Mod517au" type="switcher" />
+        <xs:element name="Mode2" type="switcher" />
+        <xs:element name="useCB" type="switcher" />
+        <xs:element name="useXB" type="switcher" />
+        <xs:element name="useL251" type="switcher" />
+        <xs:element name="useA251" type="switcher" />
+        <xs:element name="Mx51" type="switcher" />
+        <xs:element name="ModC812" type="switcher" />
+        <xs:element name="ModCont" type="switcher" />
+        <xs:element name="Lp51" type="switcher" />
+        <xs:element name="useXBS" type="switcher" />
+        <xs:element name="ModDA" type="switcher" />
+        <xs:element name="ModAB2" type="switcher" />
+        <xs:element name="Mx51P" type="switcher" />
+        <xs:element name="hadXRAM2" type="switcher" />
+        <xs:element name="uocXram2" type="switcher" />
+        <xs:element name="hadXRAM3" type="switcher" />
+        <xs:element name="hadIROM3" type="switcher" />
+        
+        <xs:element name="ModC2" type="switcher" />
+        <xs:element name="ModH2" type="switcher" />
+        <xs:element name="Mdu_R515" type="switcher" />
+        <xs:element name="Mdu_F120" type="switcher" />
+        <xs:element name="Psoc" type="switcher" />
+        
+        <xs:element name="hadIROM2" type="switcher" />
+        <xs:element name="ModSmx2" type="switcher" />
+        
+        <xs:element name="cBanks" type="xs:unsignedShort" />
+        <xs:element name="xBanks" type="xs:unsignedShort" />
+
+        <xs:element name="OnChipMemories">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="RCB" type="MemoryRange"/>
+              <xs:element name="RXB" type="MemoryRange"/>
+              <xs:element name="Ocm1" type="MemoryRange"/>
+              <xs:element name="Ocm2" type="MemoryRange"/>
+              <xs:element name="Ocm3" type="MemoryRange"/>
+              <xs:element name="Ocr1" type="MemoryRange"/>
+              <xs:element name="Ocr2" type="MemoryRange"/>
+              <xs:element name="Ocr3" type="MemoryRange"/>
+              <xs:element name="IRO" type="MemoryRange"/>
+              <xs:element name="IRA" type="MemoryRange"/>
+              <xs:element name="XRA" type="MemoryRange"/>
+              <xs:element name="XRA512" type="MemoryRange"/>
+              <xs:element name="XRA513" type="MemoryRange"/>
+              <xs:element name="IROM512" type="MemoryRange"/>
+              <xs:element name="IROM513" type="MemoryRange"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C51">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="RegisterColoring" type="twoBits" />
+        <xs:element name="VariablesInOrder" type="twoBits" />
+        <xs:element name="IntegerPromotion" type="twoBits" />
+        <xs:element name="uAregs" type="twoBits" />
+        <xs:element name="UseInterruptVector" type="twoBits" />
+        <xs:element name="Fuzzy" type="fourBits" />
+        <xs:element name="Optimize" type="fourBits"/>
+        <xs:element name="WarningLevel" type="fourBits"/>
+        <xs:element name="SizeSpeed" type="twoBits" />
+        <xs:element name="ObjectExtend" type="twoBits" />
+        <xs:element name="ACallAJmp" type="twoBits" />
+        
+        <xs:element name="InterruptVectorAddress" type="xs:long" />
+        <xs:element name="VariousControls" type="VariousControlsType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Ax51">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="UseMpl" type="twoBits" />
+        <xs:element name="UseStandard" type="twoBits" />
+        <xs:element name="UseCase" type="twoBits" />
+        <xs:element name="UseMod51" type="twoBits" />
+        <xs:element name="VariousControls" type="VariousControlsType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Lx51">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="useFile" type="switcher" />
+        <xs:element name="linkonly" type="switcher" />
+        <xs:element name="UseMemoryFromTarget" type="switcher" />
+        <xs:element name="CaseSensitiveSymbols" type="switcher" />
+        <xs:element name="WarningLevel" type="fourBits" />
+        <xs:element name="DataOverlaying" type="switcher" />
+        
+        <xs:element name="OverlayString" type="xs:string"/>
+        <xs:element name="MiscControls" type="xs:string"/>
+        <xs:element name="DisableWarningNumbers" type="xs:string"/>
+        <xs:element name="LinkerCmdFile" type="xs:string"/>
+        <xs:element name="Assign" type="xs:string"/>
+        <xs:element name="ReserveString" type="xs:string"/>
+        <xs:element name="CClasses" type="xs:string"/>
+        <xs:element name="UserClasses" type="xs:string"/>
+        <xs:element name="CSection" type="xs:string"/>
+        <xs:element name="UserSection" type="xs:string"/>
+        
+        <xs:element name="CodeBaseAddress" type="xs:string"/>
+        <xs:element name="XDataBaseAddress" type="xs:string"/>
+        <xs:element name="PDataBaseAddress" type="xs:string"/>
+        <xs:element name="BitBaseAddress" type="xs:string"/>
+        <xs:element name="DataBaseAddress" type="xs:string"/>
+        <xs:element name="IDataBaseAddress" type="xs:string"/>
+        
+        <xs:element name="Precede" type="xs:string"/>
+        <xs:element name="Stack" type="xs:string"/>
+        
+        <xs:element name="CodeSegmentName" type="xs:string"/>
+        <xs:element name="XDataSegmentName" type="xs:string"/>
+        <xs:element name="BitSegmentName" type="xs:string"/>
+        <xs:element name="DataSegmentName" type="xs:string"/>
+        <xs:element name="IDataSegmentName" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!--options specific to target 251-->
+  <xs:element name="Target251Misc">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="BankNo" type="xs:unsignedShort" />
+        <xs:element name="MemoryModel" type="xs:unsignedByte" />
+        <xs:element name="RTOS" type="xs:unsignedShort" />
+        <xs:element name="RomSize" type="xs:unsignedShort" />
+        <xs:element name="NearDataHold" type="xs:unsignedLong" />
+        <xs:element name="XDataHold" type="xs:unsignedLong" />
+        <xs:element name="FarDataHold" type="xs:unsignedLong"/>
+        
+        <xs:element name="uocRom" type="switcher" />
+        <xs:element name="uocXRAM" type="switcher" />
+        <xs:element name="uSrcBin" type="switcher" />
+        <xs:element name="uFrame4" type="switcher" />
+        <xs:element name="hadIRAM" type="switcher" />
+        <xs:element name="hadXRAM" type="switcher" />
+        <xs:element name="hadIROM" type="switcher" />
+        <xs:element name="Use_Code_Banking" type="switcher" />
+        <xs:element name="uCC7" type="switcher" />
+        <xs:element name="fp_hp" type="switcher" />
+        
+        <xs:element name="CBANKS2" type="xs:unsignedShort" />
+
+        <xs:element name="OnChipMemories">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="RCB" type="MemoryRange"/> <!--Code-Bank-Area-->
+              <xs:element name="IROM" type="MemoryRange"/>
+              <xs:element name="IRAM" type="MemoryRange"/>
+              <xs:element name="XRAM" type="MemoryRange"/>
+              <xs:element name="Ocm1" type="MemoryRange"/>
+              <xs:element name="Ocm2" type="MemoryRange"/>
+              <xs:element name="Ocm3" type="MemoryRange"/>
+              <xs:element name="Ocm4" type="MemoryRange"/>
+              <xs:element name="Ocm5" type="MemoryRange"/>
+              <xs:element name="Ocm6" type="MemoryRange"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C251">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="RegColor" type="twoBits" />
+        <xs:element name="uOrder" type="twoBits" />
+        <xs:element name="uAlias" type="twoBits" />
+        <xs:element name="uRentF" type="twoBits" />
+        <xs:element name="uUch" type="twoBits" />
+        <xs:element name="uFlt64" type="twoBits" />
+        <xs:element name="Fuzzy" type="fourBits" />
+        <xs:element name="Optim" type="fourBits" />
+        <xs:element name="wLevel" type="fourBits" />
+        <xs:element name="SizSpd" type="twoBits" />
+        <xs:element name="AcaOpt" type="twoBits" />
+        <xs:element name="VariousControls" type="VariousControlsType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!--options specific to target Arm-->
+  <xs:element name="ArmMisc">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="asLst" type="switcher" />
+        <xs:element name="asHll" type="switcher" />
+        <xs:element name="asAsm" type="switcher" />
+        <xs:element name="asMacX" type="switcher" />
+        <xs:element name="asSyms" type="switcher" />
+        <xs:element name="asFals" type="switcher" />
+        <xs:element name="asDbgD" type="switcher" />
+        <xs:element name="asForm" type="switcher" />
+        <xs:element name="ldLst" type="switcher" />
+        <xs:element name="ldmm" type="switcher" />
+        <xs:element name="ldXref" type="switcher" />
+        <xs:element name="BigEnd" type="switcher" />
+        
+        <xs:element name="GCPUTYP" type="xs:string"/>
+        
+        <xs:element name="mOS" type="xs:unsignedByte" />
+        <xs:element name="uocRom" type="switcher" />
+        <xs:element name="uocRam" type="switcher" />
+        <xs:element name="hadIROM" type="switcher" />
+        <xs:element name="hadIRAM" type="switcher" />
+        <xs:element name="hadXRAM" type="switcher" />
+        <xs:element name="uocXRam" type="switcher" />
+        <xs:element name="RvdsVP" type="sixBits" />
+        <xs:element name="RvdsCdeCp" type="xs:byte" />
+        <xs:element name="hadIRAM2" type="switcher" />
+        <xs:element name="hadIROM2" type="switcher" />
+
+        <xs:element name="OnChipMemories">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Ocm1" type="MemoryRange"/>
+              <xs:element name="Ocm2" type="MemoryRange"/>
+              <xs:element name="Ocm3" type="MemoryRange"/>
+              <xs:element name="Ocm4" type="MemoryRange"/>
+              <xs:element name="Ocm5" type="MemoryRange"/>
+              <xs:element name="Ocm6" type="MemoryRange"/>
+              <xs:element name="IRAM" type="MemoryRange"/>
+              <xs:element name="IROM" type="MemoryRange"/>
+              <xs:element name="XRAM" type="MemoryRange"/>
+              <xs:element name="IRAM2" type="MemoryRange"/>
+              <xs:element name="IROM2" type="MemoryRange"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Carm">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="arpcs" type="twoBits" />
+        <xs:element name="stkchk" type="twoBits" />
+        <xs:element name="reentr" type="twoBits" />
+        <xs:element name="interw" type="twoBits" />
+        <xs:element name="bigend" type="twoBits" />
+        <xs:element name="Strict" type="twoBits" />
+        <xs:element name="Optim" type="xs:unsignedByte" />
+        <xs:element name="wLevel" type="xs:unsignedByte" />
+        <xs:element name="uThumb" type="twoBits" />
+        <xs:element name="VariousControls" type="VariousControlsType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Aarm">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="bBE" type="twoBits" />
+        <xs:element name="interw" type="twoBits" />
+        <xs:element name="VariousControls" type="VariousControlsType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="LDarm">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="umfTarg" type="switcher" />
+        <xs:element name="enaGarb" type="switcher" />
+        <xs:element name="noStart" type="switcher" />
+        <xs:element name="noStLib" type="switcher" />
+        <xs:element name="uMathLib" type="switcher" />
+        
+        <xs:element name="TextAddressRange" type="xs:string"/>
+        <xs:element name="DataAddressRange" type="xs:string"/>
+        <xs:element name="BSSAddressRange" type="xs:string"/>
+        <xs:element name="IncludeLibs" type="xs:string"/>
+        <xs:element name="IncludeDir" type="xs:string"/>
+        <xs:element name="Misc" type="xs:string"/>
+        <xs:element name="ScatterFile" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!--common definitions used by different sections-->
+  <xs:complexType name="MemoryRange">
+    <xs:sequence>
+      <xs:element name="Type" type="xs:unsignedByte" />
+      <xs:element name="StartAddress" type="HexaDecimal" />
+      <xs:element name="Size" type="HexaDecimal" />
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="VariousControlsType">
+    <xs:sequence>
+      <xs:element name="MiscControls" type="xs:string"/>
+      <xs:element name="Define" type="xs:string"/>
+      <xs:element name="Undefine" type="xs:string"/>
+      <xs:element name="IncludePath" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="UserProgSettings">
+    <xs:sequence>
+      <xs:element name="RunUserProg1" type="switcher" />
+      <xs:element name="RunUserProg2" type="switcher" />
+      <xs:element name="UserProg1Name" type="xs:string" />
+      <xs:element name="UserProg2Name" type="xs:string" />
+      <xs:element name="UserProg1Dos16Mode" type="switcher" />
+      <xs:element name="UserProg2Dos16Mode" type="switcher" />
+      <xs:element name="nStopB1X" type="fiveBits" />
+      <xs:element name="nStopB2X" type="fiveBits" />
+    </xs:sequence>
+  </xs:complexType>
+	
+  <xs:complexType name="UserProgSettings2">
+	  <xs:sequence>
+		  <xs:element name="RunUserProg1" type="switcher" />
+		  <xs:element name="RunUserProg2" type="switcher" />
+		  <xs:element name="UserProg1Name" type="xs:string" />
+		  <xs:element name="UserProg2Name" type="xs:string" />
+		  <xs:element name="UserProg1Dos16Mode" type="switcher" />
+		  <xs:element name="UserProg2Dos16Mode" type="switcher" />
+      <xs:element name="nStopA1X" type="fiveBits" />
+      <xs:element name="nStopA2X" type="fiveBits" />
+    </xs:sequence>
+  </xs:complexType>
+
+	<xs:complexType name="BeforeCompileType">
+    <xs:sequence>
+      <xs:element name="RunUserProg1" type="switcher" />
+      <xs:element name="RunUserProg2" type="switcher" />
+      <xs:element name="UserProg1Name" type="xs:string" />
+      <xs:element name="UserProg2Name" type="xs:string" />
+      <xs:element name="UserProg1Dos16Mode" type="switcher" />
+      <xs:element name="UserProg2Dos16Mode" type="switcher" />
+  	  <xs:element minOccurs="0" maxOccurs="1" name="nStopU1X" type="xs:byte" />
+      <xs:element minOccurs="0" maxOccurs="1" name="nStopU2X" type="xs:byte" />
+	</xs:sequence>
+  </xs:complexType>
+  
+  <xs:element name="CommonProperty"> <!--Property common to target, group and file-->
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="UseCPPCompiler" type="xs:unsignedByte" />
+        <xs:element name="RVCTCodeConst" type="fourBits"/>
+        <xs:element name="RVCTZI" type="fourBits"/>
+        <xs:element name="RVCTOtherData" type="fourBits"/>
+        <xs:element name="ModuleSelection" type="xs:unsignedByte" />
+        <xs:element name="IncludeInBuild" type="xs:unsignedByte" />
+        <xs:element name="AlwaysBuild" type="xs:unsignedByte" />
+        <xs:element name="GenerateAssemblyFile" type="xs:unsignedByte" />
+        <xs:element name="AssembleAssemblyFile" type="xs:unsignedByte" />
+        <xs:element name="PublicsOnly" type="xs:unsignedByte" />
+        <xs:element name="StopOnExitCode" type="xs:unsignedShort"/>
+        <xs:element name="CustomArgument" type="xs:string"/>
+        <xs:element name="IncludeLibraryModules" type="xs:string"/>
+        <xs:element minOccurs="0" maxOccurs="1" name="BankNo" type="xs:unsignedShort" />
+      </xs:sequence>
+    </xs:complexType>
+
+  </xs:element>
+  <xs:simpleType name='HexaDecimal'>
+    <xs:restriction base='xs:string'>
+      <xs:pattern value='(0)(x|X)([0-9]|[A-F]|[a-f])+'/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="switcher"> <!--one bit value: 0|1 -->
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="twoBits">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="3"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="threeBits">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="7"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="fourBits">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="15"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="fiveBits">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="31"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="sixBits">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="63"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="sevenBits">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="127"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- RTE specific data types  -->
+  <!-- file category type -->
+  <xs:simpleType name="FileCategoryType">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="doc"/>
+      <xs:enumeration value="header"/>
+      <xs:enumeration value="library"/>
+      <xs:enumeration value="object"/>
+      <xs:enumeration value="image"/>
+      <xs:enumeration value="utility"/>
+      <xs:enumeration value="source"/>
+      <xs:enumeration value="sourceC"/>
+      <xs:enumeration value="sourceCpp"/>
+      <xs:enumeration value="sourceAsm"/>
+      <xs:enumeration value="linkerScript"/>
+      <xs:enumeration value="flash"/>
+      <xs:enumeration value="other"/>
+      <!-- temporary for backward compatibility, remove when all pdsc files are updated! -->
+      <xs:enumeration value="svd"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="MaxInstancesType">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- version can contain one or more of alphanumeric charachters and symbols '_' '-' '.' 
+       Important: version pattern shallremain the same while versions change
+  -->
+  <xs:simpleType name="VersionType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[\.\-_A-Za-z0-9]+"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="InstanceType">
+    <xs:simpleContent>
+      <xs:extension base='xs:string'>
+        <xs:attribute name="index" type="xs:decimal" use="optional"/>
+        <xs:attribute name="removed" type="xs:boolean" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="PackageType">
+    <xs:sequence>
+      <!-- list of target infos and settings  -->
+      <xs:element name="targetInfos"  type="UsedTargetInfosType"  minOccurs="0"/>    
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="license" type="xs:string" use="optional"/>
+    <xs:attribute name="schemaVersion" type="xs:string" use="optional"/>
+    <xs:attribute name="vendor" type="xs:string" use="optional"/>
+    <xs:attribute name="version" type="xs:string" use="optional"/>
+    <xs:attribute name="url" type="xs:anyURI" use="optional"/>
+  </xs:complexType>
+
+  <xs:complexType name="PackageFilterType">
+    <xs:sequence>
+      <!-- list of target infos and settings  -->
+      <xs:element name="targetInfos"  type="UsedTargetInfosType"  minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="PackagesType">
+    <xs:sequence>
+      <xs:element name="filter" type="PackageFilterType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="package" type="PackageType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:complexType name="GpdscType">
+    <xs:sequence>
+      <!-- list of target infos and settings  -->
+      <xs:element name="targetInfos"  type="UsedTargetInfosType"  minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="GpdscContainerType">
+    <xs:sequence>
+      <xs:element name="gpdsc" type="GpdscType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <!-- Version mode  -->
+  <xs:simpleType name="VersionMatchModeType">
+    <xs:restriction base="xs:token">
+      <!-- version agnostic (implicit default)-->
+      <xs:enumeration value="any"/>
+      <!-- exact component version is required -->
+      <xs:enumeration value="fixed"/>
+      <!-- the latests available version is required -->
+      <xs:enumeration value="latest"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- deprecated target info to support legacy projects, TargetInfoType is used in new projects  -->
+  <xs:complexType name="TargetType">
+    <xs:simpleContent>
+      <xs:extension base='xs:string'>
+        <!-- flag indicating that the component is explicitly ignored by the targed (default false) -->
+        <xs:attribute name="excluded" type="xs:boolean" use="optional"/>
+        <!-- number of instances for this target -->
+        <xs:attribute name="instances" type="xs:integer" use="optional"/>
+        <!-- version match mode : fixed, latest or any (default) -->
+        <xs:attribute name="versionMatchMode" type="VersionMatchModeType" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <!-- target info, describes target settings  -->
+  <xs:complexType name="TargetInfoType">
+    <xs:all>
+      <xs:element name="mem">
+        <xs:complexType>
+          <xs:all>
+            <xs:element name="RVCTCodeConst" type="fourBits"/>
+            <xs:element name="RVCTZI" type="fourBits"/>
+            <xs:element name="RVCTOtherData" type="fourBits"/>
+          </xs:all>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="c">
+        <xs:complexType>
+          <xs:all>
+            <xs:element name="Optim" type="sevenBits" />
+            <xs:element name="oTime" type="twoBits" />
+            <xs:element name="MiscControls" type="xs:string"/>
+            <xs:element name="Define" type="xs:string"/>
+            <xs:element name="Undefine" type="xs:string"/>
+          </xs:all>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="asm">
+        <xs:complexType>
+          <xs:all>
+            <xs:element name="UseClangAsm" type="xs:string"/>
+            <xs:element name="ClangAsmOpt" type="xs:string"/>
+            <xs:element name="MiscControls" type="xs:string"/>
+            <xs:element name="Define" type="xs:string"/>
+            <xs:element name="Undefine" type="xs:string"/>
+          </xs:all>
+        </xs:complexType>
+      </xs:element>
+    </xs:all>
+    <!-- target name -->
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <!-- flag indicating that the component is explicitly ignored by the target (default false) -->
+    <xs:attribute name="excluded" type="xs:boolean" use="optional"/>
+    <!-- flag indicating that the component is added to library build, only relevant when building a library (default false) -->
+    <xs:attribute name="includeInLib" type="xs:boolean" use="optional"/>
+    <!-- number of instances for this target -->
+    <xs:attribute name="instances" type="xs:integer" use="optional"/>
+    <!-- version match mode : fixed, latest or any (default) -->
+    <xs:attribute name="versionMatchMode" type="VersionMatchModeType" use="optional"/>
+  </xs:complexType>
+
+
+  <xs:complexType name="UsedTargetsType">
+    <xs:sequence>
+      <xs:element name="target" type="TargetType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="UsedTargetInfosType">
+    <xs:sequence>
+      <xs:element name="targetInfo" type="TargetInfoType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  
+  <xs:complexType name="ApiType">
+    <xs:all>
+      <!-- a package origin-->
+      <xs:element name="package" type="PackageType" minOccurs="0"/>
+      <!-- list of targets that use this component (deprecated)--> 
+      <xs:element name="targets"  type="UsedTargetsType"  minOccurs="0"/>
+      <!-- list of target infos and settings  -->
+      <xs:element name="targetInfos"  type="UsedTargetInfosType"  minOccurs="0"/>
+    </xs:all>
+    <xs:attribute name="Cclass" type="xs:string" use="required"/>
+    <xs:attribute name="Cgroup" type="xs:string" use="required"/>
+    <xs:attribute name="exclusive" type="xs:boolean" use="optional"/>
+    <xs:attribute name="Capiversion" type="VersionType" use="optional"/>
+  </xs:complexType>
+
+  <xs:complexType name="ApisType">
+    <xs:sequence>
+      <xs:element name="api" type="ApiType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  
+  <xs:complexType name="ComponentType">
+    <xs:all>
+      <!-- a package origin-->
+      <xs:element name="package" type="PackageType" minOccurs="0"/>
+      <!-- list of targets that use this component (deprecated)-->
+      <xs:element name="targets"  type="UsedTargetsType"  minOccurs="0"/>
+      <!-- list of target infos and settings  -->
+      <xs:element name="targetInfos"  type="UsedTargetInfosType"  minOccurs="0"/>
+    </xs:all>
+    <!-- component identity attributes -->
+    <xs:attribute name="Cvendor"  type="xs:string" use="optional"/>
+    <xs:attribute name="Cbundle"  type="xs:string" use="optional"/>
+    <xs:attribute name="Cclass"   type="xs:string" use="required"/>
+    <xs:attribute name="Cgroup"   type="xs:string" use="required"/>
+    <xs:attribute name="Csub"     type="xs:string" use="optional"/>
+    <xs:attribute name="Cvariant" type="xs:string" use="optional"/>
+    <xs:attribute name="isDefaultVariant"  type="xs:integer" use="optional"/>
+    <xs:attribute name="Cversion" type="VersionType" use="optional"/>
+    <xs:attribute name="layer"  type="xs:string" use="optional"/>
+    <!-- component' api version -->
+    <xs:attribute name="Capiversion" type="VersionType" use="optional"/>
+    <!-- component attribute for referencing a condition specified in conditions section above -->
+    <xs:attribute name="condition" type="xs:string" use="optional"/>
+    <!-- maximum allowed number of instances of a component in a project, default - 1-->
+    <xs:attribute name="maxInstances" type="MaxInstancesType" use="optional"/>
+    <xs:attribute name="RTE_Components_h" type="xs:string" use="optional"/>
+
+    <!-- for instance specifics -->
+    <xs:attribute name="api" type= "xs:boolean" use="optional"/>
+    <!-- flag indicating that targets use individual version/variant settings (default is false)-->
+    <xs:attribute name="isTargetSpecific" type="xs:boolean" use="optional"/>
+
+    <!-- for device-specific component, deprecated -->
+    <xs:attribute name="Dname" type="xs:string" use="optional"/>
+
+  </xs:complexType>
+
+
+  <xs:complexType name="ComponentsType">
+    <xs:sequence>
+      <xs:element name="component" type="ComponentType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- file type definition -->
+  <xs:complexType name="FileType">
+    <xs:all>
+      <!-- instance name and index-->
+      <xs:element name="instance"  type="InstanceType" minOccurs="1" maxOccurs="1"/>
+      <!-- originating component -->
+      <xs:element name="component" type="ComponentType" minOccurs="1" maxOccurs="1"/>
+      <!-- originating package -->
+      <xs:element name="package"   type="PackageType" minOccurs="1" maxOccurs="1"/>
+      <!-- list of targets that use this file (deprecated)-->
+      <xs:element name="targets"  type="UsedTargetsType"  minOccurs="0"/>
+      <!-- list of target infos (no settings at file level)  -->
+      <xs:element name="targetInfos"  type="UsedTargetInfosType"  minOccurs="0"/>
+    </xs:all>
+    <!-- file attributes -->
+    <xs:attribute name="condition" type="xs:string" use="optional"/>
+    <xs:attribute name="category"  type="FileCategoryType" use ="required"/>
+    <!-- path + filename + extension -->
+    <xs:attribute name="name"    type ="xs:string" use="required" />
+    <!-- copy file to project folder:  deprecated, use attr="config" instead  -->
+    <xs:attribute name="copy"    type ="xs:string" use="optional"/>
+    <!-- file item action attribute : config (copy to project, template, interface)  -->
+    <xs:attribute name="attr"    type="xs:string" use ="optional"/>
+    <!-- description for "template" or "interface" files. Multiple items are combined when they have the same select attribute  -->
+    <xs:attribute name="select"  type="xs:string" use ="optional"/>
+    <!-- path(s) to find source files for a library, paths are delimited with semicolon (;) -->
+    <xs:attribute name="src"     type="xs:string" use ="optional"/>
+    <!-- simple file version: to be used by RTE copy file action to see whether the file needs updating in project -->
+    <xs:attribute name="version" type ="VersionType" use="optional"/>
+
+    <!-- for device-specific files -->
+    <xs:attribute name="Dname" type="xs:string" use="optional"/>
+
+  </xs:complexType>
+
+  <xs:complexType name="FilesType">
+    <xs:sequence>
+      <xs:element name="file" type="FileType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="BoardsType">
+    <xs:sequence>
+      <xs:element name="board" type="BoardType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="BoardType">
+    <xs:all>
+      <!-- a package origin-->
+      <xs:element name="package" type="PackageType" minOccurs="0"/>
+      <!-- list of targets that use this component (deprecated)-->
+      <xs:element name="targets"  type="UsedTargetsType"  minOccurs="0"/>
+      <!-- list of target infos and settings  -->
+      <xs:element name="targetInfos"  type="UsedTargetInfosType"  minOccurs="0"/>
+    </xs:all>
+    <!-- board identity attributes -->
+    <xs:attribute name="Bname"  type="xs:string" use="required"/>
+    <xs:attribute name="Bvendor"  type="xs:string" use="optional"/>
+    <xs:attribute name="Bversion"   type="xs:string" use="required"/>
+  </xs:complexType>
+
+</xs:schema>

@@ -1,0 +1,83 @@
+{
+  "generated": "2026-10-29T10:04:48.429Z",
+  "source": "recorded from a real MDK 5.43a installation by reverse/toolchain_snapshot",
+  "uvisionVersion": "5.43a",
+  "buildNumber": "543",
+  "toolVariant": "mdk_lite",
+  "toolsets": [
+    {
+      "id": 0,
+      "name": "ARMCLANG",
+      "display": "Arm Compiler 6",
+      "version": "V6.24",
+      "binDir": "ARM/ARMCLANG/bin",
+      "tools": [
+        "armclang",
+        "armlink",
+        "fromelf",
+        "armar",
+        "armasm"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "ARMCC",
+      "display": "Arm Compiler 5",
+      "version": "V5.06 update 6 (build 750)",
+      "binDir": "ARM/ARMCC/bin",
+      "tools": [
+        "armcc",
+        "armasm",
+        "armlink",
+        "fromelf",
+        "armar"
+      ]
+    }
+  ],
+  "toolCommands": {
+    "armcc": [
+      "-c",
+      "--cpu",
+      "--apcs",
+      "-I",
+      "-D",
+      "-o",
+      "--depend",
+      "--list"
+    ],
+    "armasm": [
+      "-g",
+      "--cpu",
+      "--pd",
+      "-I",
+      "-o",
+      "--list"
+    ],
+    "armlink": [
+      "--cpu",
+      "--scatter",
+      "--map",
+      "--info",
+      "--list",
+      "-o",
+      "--via"
+    ],
+    "fromelf": [
+      "--i32combined",
+      "--text",
+      "-o"
+    ],
+    "armclang": [
+      "-c",
+      "--target",
+      "-I",
+      "-D",
+      "-o",
+      "-MD"
+    ]
+  },
+  "packRootsExample": "%LOCALAPPDATA%/Arm/Packs",
+  "licensedFeatures": [
+    "MDK-ARM (build gate error #601 when absent)"
+  ]
+}

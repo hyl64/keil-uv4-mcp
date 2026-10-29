@@ -1,0 +1,16 @@
+import { buildGraph, impacted } from "../src/deps.mjs";
+import fs from "node:fs";
+import path from "node:path";
+import os from "node:os";
+const dir = fs.mkdtempSync(path.join(os.tmpdir(), "imp-"));
+const abs = path.join(dir, "main.c");
+const hdr = path.join(dir, "inc", "h.h");
+fs.mkdirSync(path.join(dir, "inc"), { recursive: true });
+fs.writeFileSync(abs, "#include \"inc/h.h\"\nint main(void){return 0;}\n");
+fs.writeFileSync(hdr, "/* h */\n");
+const tmp = path.join(dir, "scan.d");
+fs.writeFileSync(tmp, abs + ": " + hdr + "\r\n", "latin1");
+const g = buildGraph(dir, [{ file: abs, depFile: tmp }]);
+console.log(JSON.stringify(g.nodes.map(n => ({ p: path.basename(n.path), deps: n.deps.map(d => path.basename(d)), usedBy: n.usedBy.length }))));
+const r = impacted(g, [hdr], [abs]);
+console.log(JSON.stringify(r, null, 1));

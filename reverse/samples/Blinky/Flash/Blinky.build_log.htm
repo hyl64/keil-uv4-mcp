@@ -1,0 +1,91 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: ¦ÌVision V5.43.1.0
+Copyright (C) 2025 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: gou dan, shh, LIC=----
+ 
+Tool Versions:
+Toolchain:       MDK-Lite  Version: 5.43.0.0
+Toolchain Path:  C:\Users\ERDAN.DESKTOP-MVAKHCO\AppData\Local\Keil_v5\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.06 update 6 (build 750)
+Assembler:       Armasm.exe V5.06 update 6 (build 750)
+Linker/Locator:  ArmLink.exe V5.06 update 6 (build 750)
+Library Manager: ArmAr.exe V5.06 update 6 (build 750)
+Hex Converter:   FromElf.exe V5.06 update 6 (build 750)
+CPU DLL:         SARMCM3.DLL V5.43.0.0
+Dialog DLL:      DCM.DLL V1.17.5.0
+Target DLL:      UL2CM3.DLL V1.164.16.0
+Dialog DLL:      TCM.DLL V1.56.6.0
+ 
+<h2>Project:</h2>
+C:\Users\ERDAN.DESKTOP-MVAKHCO\Documents\deepseek-harness\default-workspace\keil-uv4-mcp\reverse\samples\Blinky\Blinky.uvprojx
+Project File Date:  10/29/2025
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.06 update 6 (build 750)', folder: 'C:\Users\ERDAN.DESKTOP-MVAKHCO\AppData\Local\Keil_v5\ARM\ARMCC\Bin'
+Rebuild target 'STM32F107 Flash'
+Error instantiating RTE components
+Error #540: 'ARM::CMSIS:RTOS:Keil RTX@4.79.0' component is not available for target 'STM32F107 Flash'
+Error #541: 'Board Support:A/D Converter(API)@1.00' API is missing (previously found in pack 'Keil::MDK-Middleware')
+Error #541: 'Board Support:Buttons(API)@1.00' API is missing (previously found in pack 'Keil::MDK-Middleware')
+Error #541: 'Board Support:LED(API)@1.00' API is missing (previously found in pack 'Keil::MDK-Middleware')
+Error #540: 'CMSIS:RTOS(API)@1.0' API is not available for target 'STM32F107 Flash'
+Error #542: Component 'Keil::Board Support&MCBSTM32C:A/D Converter@2.0.0': API version '1.0.0' or compatible is required.API definition is missing (no pack ID is available)
+Error #542: Component 'Keil::Board Support&MCBSTM32C:Buttons@2.0.0': API version '1.0.0' or compatible is required.API definition is missing (no pack ID is available)
+Error #542: Component 'Keil::Board Support&MCBSTM32C:LED@2.0.0': API version '1.0.0' or compatible is required.API definition is missing (no pack ID is available)
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                https://www.keil.com/pack/ARM.CMSIS.6.2.0.pack
+                ARM::CMSIS@6.2.0
+                CMSIS (Common Microcontroller Software Interface Standard)
+   * Component: CORE Version: 6.1.1
+
+Package Vendor: Keil
+                https://www.keil.com/pack/Keil.STM32F1xx_DFP.2.4.1.pack
+                Keil::STM32F1xx_DFP@2.4.1
+                STMicroelectronics STM32F1 Series Device Support, Drivers and Examples
+   * Component: A/D Converter Version: 2.0.0
+   * Component: Buttons Version: 2.0.0
+   * Component: LED Version: 2.0.0
+   * Component: GPIO Version: 1.3
+   * Component: Startup Version: 1.0.0
+
+<h2>Collection of Component include folders:</h2>
+  ./RTE/Device/STM32F107VC
+  ./RTE/_STM32F107_Flash
+  C:/Users/ERDAN.DESKTOP-MVAKHCO/AppData/Local/Arm/Packs/ARM/CMSIS/6.2.0/CMSIS/Core/Include
+  C:/Users/ERDAN.DESKTOP-MVAKHCO/AppData/Local/Arm/Packs/Keil/STM32F1xx_DFP/2.4.1/Device/Include
+  C:/Users/ERDAN.DESKTOP-MVAKHCO/AppData/Local/Arm/Packs/Keil/STM32F1xx_DFP/2.4.1/RTE_Driver
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE@6.1.1
+
+   * Component: Keil::Board Support&MCBSTM32C:A/D Converter@2.0.0
+      Source file:   Boards/Keil/MCBSTM32C/Common/ADC_MCBSTM32C.c
+
+   * Component: Keil::Board Support&MCBSTM32C:Buttons@2.0.0
+      Source file:   Boards/Keil/MCBSTM32C/Common/Buttons_MCBSTM32C.c
+
+   * Component: Keil::Board Support&MCBSTM32C:LED@2.0.0
+      Source file:   Boards/Keil/MCBSTM32C/Common/LED_MCBSTM32C.c
+
+   * Component: Keil::Device:GPIO@1.3
+      Include file:  RTE_Driver/GPIO_STM32F10x.h
+      Source file:   RTE_Driver/GPIO_STM32F10x.c
+
+   * Component: Keil::Device:Startup@1.0.0
+      Source file:   Device/Source/system_stm32f10x.c
+      Include file:  RTE_Driver/Config/RTE_Device.h
+      Source file:   Device/Source/ARM/startup_stm32f10x_cl.s
+      Source file:   Device/Source/ARM/STM32F1xx_OPT.s
+Target not created.
+Build Time Elapsed:  00:00:00
+</pre>
+</body>
+</html>

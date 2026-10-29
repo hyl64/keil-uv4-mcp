@@ -1,0 +1,10 @@
+import { startServer } from "../tests/mcp_client.mjs";
+import path from "node:path";
+const c = startServer(path.resolve("src/server.mjs"));
+await c.request("initialize", { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "dbg", version: "1" } });
+c.notify("notifications/initialized", {});
+const r = await c.callTool("uv4_rebuild", { project: path.resolve("reverse/samples/Gen2/app.uvprojx"), async: false, outputLog: path.resolve("reverse/gen2_dbg.log") });
+console.log(JSON.stringify({ exit: r.data.exitCode, logTail: r.data.logTail }, null, 1));
+const r2 = await c.callTool("dep_scan", { project: path.resolve("reverse/samples/Minimal/minimal.uvprojx"), file: path.resolve("reverse/samples/Minimal/main.c") });
+console.log(JSON.stringify(r2.data).slice(0, 700));
+c.close();

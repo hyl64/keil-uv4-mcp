@@ -1,0 +1,5 @@
+Dependencies for Project 'minimal', Target 'Flash': (DO NOT MODIFY !)
+CompilerVersion: 5060750::V5.06 update 6 (build 750)::ARMCC
+F (.\startup.s)(0x00045842)(--cpu Cortex-M3 --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__UVISION_VERSION SETA 543" --list .\objects\startup.lst --xref -o .\objects\startup.o --depend .\objects\startup.d)
+F (.\main.c)(0x00045608)(--c99 -c --cpu Cortex-M3 -D__EVAL -g -O2 --apcs=interwork -I ..\CMSIS -I ..\Device -D__UVISION_VERSION="543" -DSTM32F10X_MD -o .\objects\main.o --depend .\objects\main.d)
+I (\Users\ERDAN.DESKTOP-MVAKHCO\AppData\Local\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h)(0x00039027)

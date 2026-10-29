@@ -1,0 +1,10 @@
+import { createServer } from "../src/server.mjs";
+import fs from "node:fs";
+import path from "node:path";
+const { server } = createServer();
+const call = async (name, args) => JSON.parse((await server.tools.get(name).handler(args)).content[0].text);
+const out = "reverse/samples/Multi2/multi.uvmpw";
+const r = await call("project_create_multi", { output: out, projects: [{ path: "../Minimal/minimal.uvprojx" }, { path: "../Gen2/app.uvprojx" }] });
+console.log("create:", r.ok, JSON.stringify(r.projects));
+const rr = await call("project_multi_read", { multi: out });
+console.log("read:", rr.ok, rr.targets.length, JSON.stringify(rr.targets.map(t => [t.project, t.target])));

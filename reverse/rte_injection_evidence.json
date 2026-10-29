@@ -1,0 +1,23 @@
+{
+  "purpose": "Explain uVision's implicit effects on a dependency record's F() command. The .dep is written BEFORE the tool runs (the command is the 'to be executed' image), so nothing in it is evidence for the opposite order.",
+  "history": [
+    {
+      "project": "reverse/samples/Minimal/minimal.uvprojx@HEAD~",
+      "observed": {
+        "F\\.\\\\startup.s": "--cpu Cortex-M3 --pd \"__EVAL SETA 1\" -g --apcs=interwork -IC:\\...\\Arm\\Packs\\Keil\\STM32F1xx_DFP\\2.4.1\\Device\\Include --pd \"__UVISION_VERSION SETA 543\" --pd \"STM32F10X_MD SETA 1\" --list .\\listings\\startup.lst --xref -o .\\objects\\startup.o --depend .\\objects\\startup.d",
+        "F\\.\\\\main.c": "--c99 -c --cpu Cortex-M3 -D__EVAL -g -O1 --apcs=interwork -I ..\\CMSIS -I ..\\Device -IC:\\...\\Arm\\Packs\\Keil\\STM32F1xx_DFP\\2.4.1\\Device\\Include -D__UVISION_VERSION=\"543\" -DSTM32F10X_MD -DSTM32F10X_MD -o .\\objects\\main.o --depend .\\objects\\main.d"
+      },
+      "differences_vs_current_flags": {
+        "Optim": "record says -O1, project file says 2 -> the record was written when the target still used -O1",
+        "defines": "record carries STM32F10X_MD twice -> the target Define was then 'STM32F10X_MD,STM32F10X_MD'"
+      }
+    }
+  ],
+  "injected_options_in_order_of_each_record": {
+    "rte_device_include": "-I<abs>\\Arm\\Packs\\Keil\\<vendor>.<pack>\\<version>\\Device\\Include ; derived from RTEPATH (TOOLS.INI) + the target's PackID/Device, independent of Cads IncludePath",
+    "uvision_version": "__UVISION_VERSION (543 for MDK 5.43): -D\"...\" for armcc, --pd \"... SETA n\" for armasm",
+    "defines": "each text define of Cads.VariousControls.Define, in order, one -D per token (asm: one --pd per token)"
+  },
+  "ordering": ["--cpu", "eval define", "-g", "optimisation", "--apcs", "user includes", "RTE include", "uVision version", "defines", "misc", "--list", "--xref", "-o", "--depend"],
+  "output_path_rendering": "object/depend/listing paths are project-relative and the directory case follows the project's OutputDirectory/ListingPath as written ('.\\Objects\\' in the project gives '.\\objects\\' here)"
+}

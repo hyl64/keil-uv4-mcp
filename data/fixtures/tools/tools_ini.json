@@ -1,0 +1,177 @@
+{
+  "generated": "2026-10-29T11:01:45.735Z",
+  "source": "parsed TOOLS.INI from a real MDK installation (paths normalised)",
+  "sections": [
+    "UV2",
+    "ARM",
+    "ARMADS"
+  ],
+  "uvision": {
+    "version": "5.43a",
+    "toolVariant": "mdk_lite",
+    "path": "<MDK>/UV4"
+  },
+  "arm": {
+    "version": "5.43a",
+    "path": "\"<MDK>/ARM/\"",
+    "rtePath": "%LOCALAPPDATA%/Arm/Packs",
+    "cmsisToolbox": "<MDK>/ARM/cmsis-toolbox",
+    "debugDrivers": [
+      {
+        "id": "TDRV0",
+        "dll": null,
+        "name": "BIN\\UL2CM3.DLL(\"ULINK2/ME Cortex Debugger\")"
+      },
+      {
+        "id": "TDRV1",
+        "dll": null,
+        "name": "BIN\\ULP2CM3.DLL(\"ULINK Pro Cortex Debugger\")"
+      },
+      {
+        "id": "TDRV2",
+        "dll": null,
+        "name": "BIN\\ULPL2CM3.dll(\"ULINKplus Debugger\")"
+      },
+      {
+        "id": "TDRV3",
+        "dll": null,
+        "name": "BIN\\CMSIS_AGDI.dll(\"CMSIS-DAP Debugger\")"
+      },
+      {
+        "id": "TDRV4",
+        "dll": null,
+        "name": "Segger\\JL2CM3.dll(\"J-LINK / J-TRACE Cortex\")"
+      },
+      {
+        "id": "TDRV5",
+        "dll": null,
+        "name": "BIN\\DbgFM.DLL(\"Models Cortex-M Debugger\")"
+      },
+      {
+        "id": "TDRV6",
+        "dll": null,
+        "name": "STLink\\ST-LINKIII-KEIL_SWO.dll (\"ST-Link Debugger\")"
+      },
+      {
+        "id": "TDRV7",
+        "dll": null,
+        "name": "NULink\\Nu_Link.dll(\"NULink Debugger\")"
+      },
+      {
+        "id": "TDRV8",
+        "dll": null,
+        "name": "PEMicro\\Pemicro_ArmCortexInterface.dll(\"Pemicro Debugger\")"
+      },
+      {
+        "id": "TDRV9",
+        "dll": null,
+        "name": "SiLabs\\SLAB_CM_Keil.dll(\"SiLabs UDA Debugger\")"
+      },
+      {
+        "id": "TDRV10",
+        "dll": null,
+        "name": "BIN\\ABLSTCM.dll(\"Altera Blaster Cortex Debugger\")"
+      },
+      {
+        "id": "TDRV11",
+        "dll": null,
+        "name": "TI_XDS\\XDS2CM3.dll(\"TI XDS Debugger\")"
+      },
+      {
+        "id": "TDRV12",
+        "dll": null,
+        "name": "BIN\\ULP2V8M.DLL(\"ULINK Pro ARMv8-M Debugger\")"
+      },
+      {
+        "id": "TDRV13",
+        "dll": null,
+        "name": "BIN\\UL2V8M.DLL(\"ULINK2/ME ARMv8-M Debugger\")"
+      },
+      {
+        "id": "TDRV14",
+        "dll": null,
+        "name": "BIN\\CMSIS_AGDI_V8M.DLL(\"CMSIS-DAP ARMv8-M Debugger\")"
+      },
+      {
+        "id": "TDRV15",
+        "dll": null,
+        "name": "BIN\\DbgFMv8M.DLL(\"Models ARMv8-M Debugger\")"
+      },
+      {
+        "id": "TDRV16",
+        "dll": null,
+        "name": "BIN\\UL2ARM.DLL(\"ULINK2/ME ARM Debugger\")"
+      },
+      {
+        "id": "TDRV17",
+        "dll": null,
+        "name": "BIN\\ULP2ARM.DLL(\"ULINK Pro ARM Debugger\")"
+      },
+      {
+        "id": "TDRV18",
+        "dll": null,
+        "name": "Segger\\JLTAgdi.dll(\"J-LINK / J-TRACE ARM\")"
+      }
+    ],
+    "toolsetDirs": []
+  },
+  "armads": {
+    "keys": [
+      "PATH",
+      "PATH1",
+      "CPUDLL0",
+      "CPUDLL1",
+      "CPUDLL2",
+      "CPUDLL3",
+      "BOOK0",
+      "BOOK1",
+      "BOOK2",
+      "BOOK3",
+      "BOOK4",
+      "BOOK5",
+      "BOOK6",
+      "BOOK7",
+      "BOOK8",
+      "BOOK9",
+      "BOOK10",
+      "BOOK11",
+      "TDRV0",
+      "TDRV1",
+      "TDRV2",
+      "TDRV3",
+      "TDRV4",
+      "TDRV5",
+      "TDRV6",
+      "TDRV7",
+      "TDRV8",
+      "TDRV9",
+      "TDRV10",
+      "TDRV11",
+      "TDRV12",
+      "TDRV13",
+      "TDRV14",
+      "TDRV15",
+      "TDRV16",
+      "TDRV17",
+      "TDRV18",
+      "RTOS0",
+      "RTOS1",
+      "DELDRVPKG0",
+      "ARMCCPATH0",
+      "ARMCCPATH1"
+    ],
+    "version": null,
+    "toolsetDirs": [
+      {
+        "id": 0,
+        "dir": "ARMCLANG",
+        "version": "V6.24"
+      },
+      {
+        "id": 1,
+        "dir": "ARMCC",
+        "version": "V5.06 update 6 (build 750)"
+      }
+    ]
+  }
+}

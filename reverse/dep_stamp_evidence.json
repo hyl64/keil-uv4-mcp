@@ -1,0 +1,34 @@
+{
+  "$comment": "Observed UV4 file-stamp (F/I hash) samples and the confirmed producer function, for reproducing <project>_<target>.dep compatibility.",
+  "producer": {
+    "function": "FUN_00680b10 (0x680b10, 1041 bytes)",
+    "evidence": "ev_f9cfaf795ab7c53d96170c19929cde5954ced6ad804cbf0d07ef62ad71da34fd",
+    "format_strings": {
+      "header": "Dependencies for Project '%s', Target '%s': (DO NOT MODIFY !)\\r\\n  @0xbdd9a8",
+      "compiler_version": "CompilerVersion: %s\\r\\n  @0xbdd8fc  (fallback literal '<unknown>' when empty, @0xbdd9e8 'CompilerVersion: ')",
+      "F": "F (%s)(0x%08X)(%s)\\r\\n  @0xbdd8e4",
+      "I": "I (%s)(0x%08X)\\r\\n  @0xbdd924",
+      "file": "%s%s_%s.dep  @0xbb7be8"
+    },
+    "notes": [
+      "F records are written for source files only (file flag & 4 skips, .uvpdbg skips).",
+      "Multi-file groups are iterated via +0x14 / +0x18 next pointers; files flagged (byte+0x21 & 8) are skipped.",
+      "The command column comes from file+0x64 (per-file custom command) or the shared tool command string.",
+      "Newlines inside the command are rewritten to CR before writing (loop at 0x680cff..0x680f17).",
+      "I records are emitted after the F record only for files whose type byte (+0x20) is 1, 2 or 8 (C, assembler, C++).",
+      "Include list head is file+0x6c; each node {next@0, fullpath@2, hash@3}.",
+      "Hash kernel: FUN_00a8d486 -> FUN_00a8cc1a (mbs->wcs) -> FUN_00a8cc9b (CRT _stat64i32); the stamped 32-bit value is stat.st_mtime captured into the high half of the return value. F() and I() therefore store the dependency file's last-write time, not a content digest: renaming a file keeps the stamp, touching it changes it.",
+      "Delta check: main.c 0x6AE203ED*1000 = 1793197037000 <= mtime 1793197037453; the dep was written at that instant."
+    ]
+  },
+  "samples": [
+    { "record": "F", "path": ".\\main.c", "stamp": "0x6AE203ED", "observed_mtime_ms": 1793197037453 },
+    { "record": "F", "path": ".\\startup.s", "stamp": "0x6AE205A5" },
+    { "record": "I", "path": "C:\\Users\\ERDAN.DESKTOP-MVAKHCO\\AppData\\Local\\Keil_v5\\ARM\\ARMCC\\include\\stdint.h", "stamp": "0x6939538B" }
+  ],
+  "consequences_for_reimplementation": {
+    "write": "stamp = floor(mtime_ms/1000) format 0x%08X",
+    "compare": "file is stale when floor(mtime/1000) != stored stamp; content changes that keep mtime identical (same-second writes) are invisible to UV4's own .dep check",
+    "canonical_path": "F paths keep the project-relative form; I paths are the full path list resolved by UV4 (absolute when outside the project)"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "purpose": "Exact on-disk formats of the µVision batch build, captured from a target with Options->Output->Create Batch File set (minimal_batch.uvprojx).",
+  "batch_file": {
+    "path": "reverse/samples/Minimal/Flash.BAT",
+    "name_rule": "target name + .BAT, written into the project root folder",
+    "lines": [
+      "SET PATH=<toolchain bin>;<inherited PATH>",
+      "SET ARMCC5_ASMOPT=--diag_suppress=9931",
+      "SET ARMCC5_CCOPT=--diag_suppress=9931",
+      "SET ARMCC5_LINKOPT=--diag_suppress=9931",
+      "SET CPU_TYPE=<device>",
+      "SET CPU_VENDOR=<vendor>",
+      "SET UV2_TARGET=<target>",
+      "SET CPU_CLOCK=0x00B71B00  (device clock 72 MHz -> 0x00B71B00)",
+      "\"<toolset>\\ArmAsm\" --Via \".\\objects\\startup._ia\"",
+      "\"<toolset>\\ArmCC\"  --Via \".\\objects\\main.__i\"",
+      "\"<toolset>\\ArmLink\" --Via \".\\Objects\\main.lnp\"",
+      "\"<toolset>\\fromelf.exe\" \".\\Objects\\main.axf\" --i32combined --output \".\\Objects\\main.hex\""
+    ]
+  },
+  "via_files": {
+    "assembler": {
+      "path": "objects\\<name>._ia",
+      "content": "--cpu Cortex-M3 --pd \"__EVAL SETA 1\" -g --apcs=interwork \\r\\n-I<RTE>\\r\\n--pd \"__UVISION_VERSION SETA 543\" --pd \"STM32F10X_MD SETA 1\"\\r\\n--list .\\listings\\<name>.lst --xref -o .\\objects\\<name>.o --depend .\\objects\\<name>.d \"<file>\""
+    },
+    "compiler": {
+      "path": "objects\\<name>.__i",
+      "content": "--c99 -c --cpu Cortex-M3 -D__EVAL -g -O<n> --apcs=interwork -I <user paths>\\r\\n-I<RTE>\\r\\n-D__UVISION_VERSION=\"543\" -D<defines>\\r\\n-o .\\objects\\<name>.o --depend .\\objects\\<name>.d \"<file>\""
+    },
+    "linker": {
+      "path": "Objects\\<output>.lnp",
+      "content": "--cpu Cortex-M3\\r\\n\"<obj>\"\\r\\n...\\r\\n--scatter \"<objects dir>\\<output>.sct\"\\r\\n--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols\\r\\n--info sizes --info totals --info unused --info veneers\\r\\n--list \"<listings>\\<output>.map\" -o \"<objects dir>\\<output>.axf\""
+    }
+  },
+  "observations": [
+    "The via files carry the SAME options as the .dep F-record command, split across 3-4 lines.",
+    "The include list inside <name>.d is produced by the compiler itself at run time (--depend) and is NOT derived from the via file; ArmCC writes '<obj>: <source>' plus '<obj>: <header>' for every header it actually opened.",
+    "Object/listing folder case in the via files follows the project OutputDirectory/ListingPath text ('.\\objects\\' for '.\\Objects\\'), while the linker .lnp keeps '.\\.Objects\\' as typed in OutputDirectory. The batch file's fromelf line matches the .lnp style.",
+    "CPU_CLOCK is the device clock in hex (72 MHz -> 0x00B71B00 = 72000000)."
+  ]
+}

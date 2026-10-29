@@ -1,0 +1,52 @@
+project:
+  packs:
+    - pack: Keil::STM32F1xx_DFP@^2.4.1
+  setups:
+    - setup: Options for Flash
+      add-path:
+        - ../../../../../../../AppData/Local/Arm/Packs/Keil/STM32F1xx_DFP/2.4.1/Device/Include
+      debug: "on"
+      define:
+        - STM32F10X_MD
+      misc:
+        - C:
+            - -std=c90
+          C-CPP:
+            - -fno-rtti
+            - -funsigned-char
+            - -fno-function-sections
+            - -Wall
+            - -Wextra
+            - -Wno-packed
+            - -Wno-reserved-id-macro
+            - -Wno-unused-macros
+            - -Wno-documentation-unknown-command
+            - -Wno-documentation
+            - -Wno-license-management
+            - -Wno-parentheses-equality
+          CPP:
+            - -xc++
+            - -std=c++98
+            - -fno-exceptions
+          ASM:
+            - -masm=auto
+          Link:
+            - --map
+            - --load_addr_map_info
+            - --xref
+            - --callgraph
+            - --symbols
+            - --info sizes
+            - --info totals
+            - --info unused
+            - --info veneers
+            - --summary_stderr
+            - --info summarysizes
+  linker:
+    - script: app_Flash.sct
+  groups:
+    - group: Application
+      files:
+        - file: startup_stm32f10x_md.s
+        - file: main.c
+        - file: sysinit.c

@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "keil-uv4": {
+      "command": "node",
+      "args": ["C:\\path\\to\\keil-uv4-mcp\\src\\server.mjs"],
+      "env": {
+        "KEIL_MDK_ROOT": "C:\\Keil_v5",
+        "UV4_TIMEOUT_MS": "900000",
+        "KEIL_UVSOCK_PORT": "4328"
+      }
+    }
+  }
+}

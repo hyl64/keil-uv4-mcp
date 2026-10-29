@@ -1,0 +1,63 @@
+{
+  "name": "keil-uv4-mcp",
+  "version": "1.2.0",
+  "description": "Standalone Keil uVision (UV4) toolkit and MCP server, reconstructed from UV4.exe: project model editing, dependency analysis, CMSIS-Pack device DB, image/map/hex analysis, UVSOCK remote control and batch generation. Runs with no Keil installation (bundled data snapshot) and gains full build/flash capability when one is present.",
+  "type": "module",
+  "main": "src/server.mjs",
+  "bin": {
+    "keil-uv4-mcp": "src/server.mjs"
+  },
+  "exports": {
+    ".": "./src/server.mjs",
+    "./portable": "./src/portable.mjs",
+    "./uvsock": "./src/uvsock.mjs"
+  },
+  "files": [
+    "src/",
+    "data/fixtures/",
+    "docs/",
+    "README.md",
+    "README.zh-CN.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "LICENSE",
+    "mcp.example.json",
+    "mcp.example.yaml"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/server.mjs",
+    "test": "node tests/run_tests.mjs",
+    "test:portable": "node tests/portable_test.mjs",
+    "test:fuzz": "node tests/fuzz_test.mjs",
+    "test:pack": "node tests/pack_test.mjs",
+    "test:compile": "node tests/compile_test.mjs",
+    "test:beginner": "node tests/beginner_test.mjs",
+    "test:all": "node tests/portable_test.mjs && node tests/fuzz_test.mjs && node tests/run_tests.mjs && node tests/compile_test.mjs && node tests/beginner_test.mjs && node tests/pack_test.mjs",
+    "fixtures:build": "node reverse/build_fixtures.mjs && node reverse/add_missing_fixtures.mjs && node reverse/fix_fixture_paths.mjs && node reverse/snapshot_toolsini.mjs"
+  },
+  "keywords": [
+    "keil",
+    "uvision",
+    "uv4",
+    "mdk",
+    "arm",
+    "cortex-m",
+    "mcp",
+    "model-context-protocol",
+    "cmsis",
+    "cmsis-pack",
+    "uvsock",
+    "embedded"
+  ],
+  "dependencies": {},
+  "author": "keil-uv4-mcp contributors",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

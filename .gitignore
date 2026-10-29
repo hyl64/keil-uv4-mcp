@@ -1,0 +1,21 @@
+# Node
+node_modules/
+npm-debug.log*
+*.tgz
+
+# local test scratch
+fuzz.out
+fuzz.err
+tests/.tmp/
+tests/.out/
+*.tmp.log
+
+# per-machine editor/OS noise
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# The fixture snapshot is the product — never ignore it.
+!data/fixtures/**

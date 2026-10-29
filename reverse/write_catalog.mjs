@@ -1,0 +1,46 @@
+import fs from "node:fs";
+const cat = {
+  generated: new Date().toISOString(),
+  source: "REA inspect_native_exports/inspect_pe_imports + PE header sweep + string probes (this session)",
+  dir: "C:/Users/ERDAN.DESKTOP-MVAKHCO/AppData/Local/Keil_v5/UV4",
+  modules: {
+    "UV4.exe": { role: "IDE core", version: "5.43.1.0", arch: "x86 PE32 GUI", sha256: "428baf13d15e6760af1618def9c9815c97f0321cc5e459ec7adc4dde41c42f89", exports: 0, imports: "xerces-c + armlm.dll(armlm_cleanup, armlm_request_capabilities) + WSOCK32/ADVAPI32; full OLE/DDE stack", notes: "CLI/dep/batch/uvsock/license gate fully reversed rounds 1-4" },
+    "UV4.dll": { role: "DCOMUTIL30 MFC OLE automation glue", version: "3.91.55", exports: 2, notes: "dll_name DCOMUTIL.dll; supports UV4 ProgID/CLSID registration strings" },
+    "uvision.com": { role: "console launcher forwarding to UV4", size: 223224 },
+    "UvEdit.dll": { role: "Scintilla editor", version: "4.4.6", exports: 1, exportNames: ["_Scintilla_DirectFunction@16"], notes: "Neil Hodgson Scintilla DLL; configured by *.prop" },
+    "UVAC.dll": { role: "dynamic syntax check + code completion (ARM Germany)", version: "5.36.0.3", exports: 14, exportNames: ["CheckSyntax", "CreateTransUnit", "FuncAvail", "GetCodeCompletion", "InitDll", "Remove", "closePrj", "createDirtyTransUnits", "getBrowseInfo", "getIndexCont", "openPrj", "populatePrj", "refreshIndexer", "updateDep"] },
+    "UvCC.dll": { role: "LLVM + Keil adaptation (AC6 integration layer)", version: "3.7.0.0", size: 27832064, notes: "LLVM NCSA licence string; loaded for cross-compilation services" },
+    "SysViewer.dll": { role: "System Viewer SFR display DLL", version: "2.30.24.0", exports: 1, exportNames: ["BootDll"], notes: "installed via installanchorservice.exe; .sfr preprocessed by SfrCC2" },
+    "SfrCC2.Exe": { role: "SFR preprocessor", version: "2.15.0.0", cli: "SfrCC2 <base> -> base.LST", notes: "FATAL-ERROR format verified live" },
+    "UVSC.dll": { role: "uVision Socket Client DLL", version: "2.30.0.0", exports: 103, notes: "protocol in uvsock_protocol.md + live-verified uvsock_live.md; re-implemented in src/uvsock.mjs" },
+    "UVSC64.dll": { role: "x64 build of UVSC", version: "2.30.0.0", exports: 103 },
+    "UVSCWrapper.dll": { role: "C++/JNI UVSOCK wrapper", version: "2.23.0.0", exports: 275, notes: "classes UVSCWrapper/UVSCCallback/UVSCLogCallback; Connect/Command/CreateLineBreakpoint/CreateWatchpoint/CreateExecBreakpoint/EvaluateWatchExpression/EnumVariables/EnumStackFrames/EnumTasks/EnumMenus/ExecMenu/AddressToFileLine/Event" },
+    "KSPAWN.EXE": { role: "console child spawner", exports: 0, cli: 'kspawn "command line"' },
+    "DoxyIndex.exe": { role: "Doxygen index parser (Source Browser)", version: "1.2.3.0", cli: "DoxyIndex [xml dirs]" },
+    "UVCDB2XML.exe": { role: "legacy .cdb -> XML converter", version: "4.73.2.1", cli: "no args: dumps <uvcdb> XML to stdout (2831 devices / 33 vendors, schema UVCDB2XML.xsd)" },
+    "uv2csolution.exe": { role: "uvprojx/uvmpw to csolution converter (Go)", version: "1.6.0", cli: "uv2csolution <proj> [-d dir] | -V", notes: "refuses AC5 targets (verified); emits csolution.yml/cproject.yml/vcpkg-configuration.json" },
+    "SVDConv.exe": { role: "CMSIS-SVD checker/generator", version: "3.3.48", cli: "--generate header|partition|sdf --fields enum/macro/struct --strict -b log" },
+    "PackInstaller.exe": { role: "GUI pack installer", version: "1.4.1.1", subsystem: "windows-gui" },
+    "PackUnzip.exe": { role: "pack extractor", version: "1.2.43.0", cli: "[-i] <in> [-o <out>] [--no-gui|-l|-p|-v] [--skip-check] [--import]" },
+    "armlm.dll": { role: "license capability shim imported by UV4/toolchain", exports: 4, exportNames: ["armlm_request_capabilities", "armlm_cleanup", "armlm_ext_request_capabilities", "armlm_ext_cleanup"] },
+    "armlm.exe": { role: "Arm License Manager daemon (Go 1.24.5 + CGO FlexNet Embedded fne-client)", activation: "https://api.arm.com/p-software-licensing/v1/activate (nonce mandatory)", store: "~/.armlm" },
+    "armlm-ipc.exe": { role: "IPC/HTTP2 shim for armlm (Go)", notes: "symbols storeLicense/DeleteLicense/RenewLicenses/doActivation*/getMachineID; internal envs ARMLM_INT_TEST_RESET_ACTIVATION_TIME, ARMLM_INT_DEBUG_SKIP_IPC_VERSION_CHECK" },
+    "armlm-gui.exe": { role: "activation GUI (Go)" },
+    "FlexNet/armlmd.exe": { role: "legacy FlexLM daemon (lmutil family: lmhostid/lmstat/lmremove/lmvdir/qtest)" },
+    "armlmdiag.exe": { role: "license diagnostics" },
+    "xerces-c_3_0.dll": { role: "Apache Xerces-C 3.0 XML engine for all UV4 XML" },
+    "gdiplus.dll + msvcr80/100.dll": { role: "Microsoft runtime deps shipped locally" },
+  },
+  formats: {
+    uvguix: "ProjectGui XML (project_guix.xsd): DockMan windows RegID/PaneID/IsFloating/PinState/rects + ControlBarsSummary; per-user <project>.uvguix.<USER>; src/formats.mjs readGuiLayout verified (79 windows on DFP Blinky.uvguix)",
+    dbgconf: "RTE debug config, Configuration Wizard comment grammar //<h> <o.bit> <i> + #define; src/formats.mjs readDbgconf verified (23 options STM32F10x DBGMCU_CR)",
+    cdb: "legacy device database via UVCDB2XML (2831 devices, 33 vendors)",
+    pack: "ZIP+PDSC reader src/packfile.mjs",
+    svcs: "UTF-16LE INI source-control menus (11 files shipped)",
+    prop: "SciTE properties chain global.prop(.def)/arm.prop/a51.prop.def",
+    dep: "F/I records with HHMMSS-as-hex stamps (round 1)",
+    rte: "RTE dirs with .base@N conflict backups + RTE_Device.h/RTX_Conf_CM.c/.dbgconf"
+  },
+};
+fs.writeFileSync(new URL("module_catalog.json", import.meta.url), JSON.stringify(cat, null, 2));
+console.log("catalog written,", Object.keys(cat.modules).length, "modules,", Object.keys(cat.formats).length, "formats");

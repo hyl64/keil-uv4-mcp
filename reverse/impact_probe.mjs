@@ -1,0 +1,10 @@
+import fs from "node:fs";
+import { buildGraph, impacted } from "../src/deps.mjs";
+const abs = "C:\\Users\\ERDAN.DESKTOP-MVAKHCO\\Documents\\deepseek-harness\\default-workspace\\keil-uv4-mcp\\reverse\\samples\\Minimal\\main.c";
+const hdr = "C:\\Keil\\ARMCC\\include\\stdint.h";
+const tmp = "C:\\tmp\\scan_main.d";
+fs.writeFileSync(tmp, `${abs}: ${hdr}\r\n`, "latin1");
+const g = buildGraph("C:\\Users\\ERDAN.DESKTOP-MVAKHCO\\Documents\\deepseek-harness\\default-workspace\\keil-uv4-mcp\\reverse\\samples\\Minimal", [{ file: abs, depFile: tmp }, { file: "C:\\proj\\startup.s", depFile: null }]);
+console.log(JSON.stringify(g.nodes.map(n => ({ p: n.path.split("\\").pop(), deps: n.deps.map(d => d.split("\\").pop()), usedBy: n.usedBy.length }))));
+const r = impacted(g, [hdr], [abs, "C:\\proj\\startup.s"]);
+console.log("recompile", r.needCompile.map(p => p.split("\\").pop()), "affected", r.affected.length);

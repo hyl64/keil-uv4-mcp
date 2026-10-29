@@ -1,0 +1,59 @@
+name: ci
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  suite:
+    name: node ${{ matrix.node }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+        node: ['20', '22', '24']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      # No dependencies: the package must stay installable with `dependencies: {}`.
+      - name: assert zero runtime dependencies
+        shell: bash
+        run: |
+          node -e "const p=require('./package.json');const n=Object.keys(p.dependencies||{}).length;if(n){console.error('runtime dependencies found:',n);process.exit(1)};console.log('dependencies: none')"
+      - name: portable mode (no Keil)
+        run: node tests/portable_test.mjs
+      - name: robustness / fuzz
+        run: node tests/fuzz_test.mjs
+      - name: functional suite
+        run: node tests/run_tests.mjs
+      - name: licence-free compile + flash
+        run: node tests/compile_test.mjs
+      - name: beginner diagnostics
+        run: node tests/beginner_test.mjs
+      - name: release gate (npm pack -> unpack -> cold start)
+        run: node tests/pack_test.mjs
+
+  cross-platform:
+    name: portable + release gate on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: portable mode (no Keil)
+        run: node tests/portable_test.mjs
+      - name: release gate (npm pack -> unpack -> cold start)
+        run: node tests/pack_test.mjs

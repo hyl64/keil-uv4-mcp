@@ -1,0 +1,11 @@
+import { createServer } from "../src/server.mjs";
+const { server } = createServer();
+const call = async (n, a) => JSON.parse((await server.tools.get(n).handler(a)).content[0].text);
+console.log("tools:", server.tools.size);
+const o = await call("options_read", { project: "reverse/samples/Minimal/minimal.uvprojx" });
+console.log(JSON.stringify(o).slice(0, 700));
+const s = await call("options_set", { project: "reverse/samples/Minimal/minimal.uvprojx", target: "Flash", path: ["TargetOption", "DebugOpt", "sIfile"], value: ".\\Debug_RAM.ini" });
+console.log(JSON.stringify(s));
+const o2 = await call("options_read", { project: "reverse/samples/Minimal/minimal.uvprojx" });
+console.log("initScript:", o2.targets[0].initScript);
+await call("options_set", { project: "reverse/samples/Minimal/minimal.uvprojx", target: "Flash", path: ["TargetOption", "DebugOpt", "sIfile"], value: "" });

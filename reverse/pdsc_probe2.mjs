@@ -1,0 +1,14 @@
+import fs from "node:fs";
+import { parseXml, childElem, childElems, findAll } from "../src/xml.mjs";
+const p="C:/Users/ERDAN.DESKTOP-MVAKHCO/AppData/Local/Arm/Packs/ARM/CMSIS/6.2.0/ARM.CMSIS.pdsc";
+const doc=parseXml(fs.readFileSync(p,"utf8").replace(/^\uFEFF/,""));
+const pkg=childElem(doc,"package");
+const comps=childElem(pkg,"components");
+const c=childElem(comps,"component");
+console.log("first children:", c.children.filter(x=>x.type==="elem").map(x=>x.name+"("+x.children.length+")").join(","));
+const all=findAll(comps,n=>n.name==="component");
+console.log("all component elements:", all.length);
+const fileEls = findAll(comps,n=>n.name==="files");
+console.log("files elements:", fileEls.length, fileEls[0] && fileEls[0].children.filter(x=>x.type==="elem").length);
+const f = findAll(comps,n=>n.name==="file");
+console.log("file elements:", f.length, f[0] && f[0].attr("name"));

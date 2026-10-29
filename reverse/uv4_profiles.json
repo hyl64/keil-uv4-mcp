@@ -1,0 +1,87 @@
+{
+  "$comment": "Observed UV4.exe command-line behaviour, verified on 2026-10-28 against UV4.exe sha256 428baf13d15e6760af1618def9c9815c97f0321cc5e459ec7adc4dde41c42f89 (MDK 5.43a, MDK-Lite non-commercial). Evidence: runtime matrix in reverse/cli_matrix.json + help pages uv4_commandline.html.",
+  "binary": {
+    "path": "C:\\Users\\ERDAN.DESKTOP-MVAKHCO\\AppData\\Local\\Keil_v5\\UV4\\UV4.exe",
+    "sha256": "428baf13d15e6760af1618def9c9815c97f0321cc5e459ec7adc4dde41c42f89",
+    "md5": "b01b163e6849b68ad38ffe3c5112166d",
+    "arch": "x86 MFC (Visual Studio 2015 runtime)",
+    "image_base": "0x400000",
+    "functions": 41876,
+    "strings": 18794
+  },
+  "cli": {
+    "syntax": "<UV4.exe> [command] [projectfile] [options]",
+    "commands": {
+      "-b": {"desc": "Build current target (or batch-selected targets) and exit", "spec_status": "verified", "exit_codes_seen": [0, 1, 2]},
+      "-r": {"desc": "Re-translate (rebuild) current target and exit", "spec_status": "verified", "exit_codes_seen": [0, 1, 2]},
+      "-c": {"desc": "Clean all project targets and exit", "spec_status": "verified", "exit_codes_seen": [0]},
+      "-cr": {"desc": "Clean all targets then re-translate current target", "spec_status": "verified", "exit_codes_seen": [0, 1, 2]},
+      "-z": {"desc": "Re-build ALL targets (multi-project); hangs when a single-target project is passed", "spec_status": "verified_hang"},
+      "-q": {"desc": "Re-build selected targets of a multi-project (.uvmpw/.uvmpwx); hangs when a single-target project is passed", "spec_status": "verified_hang"},
+      "-d": {"desc": "Start debugging mode (use with debug init script + EXIT command)", "spec_status": "documented_only"},
+      "-f": {"desc": "Download program to Flash and exit", "spec_status": "documented_only"},
+      "-5": {"desc": "Convert uVision4 .uvproj to uVision5 .uvprojx; -l logfile; error 20 on failure", "spec_status": "documented_only"},
+      "-et": {"desc": "Export target to <projectName>.<targetName>.cprj", "spec_status": "documented_only"},
+      "-ep": {"desc": "Export all targets to .cprj files", "spec_status": "documented_only"},
+      "-X": {"desc": "Generate preprocessor symbol file co-arm_<target>.h/hpp in target output folder", "spec_status": "verified"},
+      "-X1": {"desc": "Generate preprocessor symbol files for all targets", "spec_status": "verified"}
+    },
+    "options": {
+      "-j0": "Hide GUI, suppress message boxes (batch mode)",
+      "-i <xml>": "Create/update project from XML (project_import.xsd); GUI suppressed",
+      "-n <device>": "Create new project for device; GUI suppressed",
+      "-np <device>": "Create project if absent, otherwise update device in all targets; GUI suppressed",
+      "-o <file>": "Output log file",
+      "-l <file>": "Log file (used with -5)",
+      "-s <port>": "Enable UVSOCK TCP/IP remote-control server on port",
+      "-t <target>": "Select current target",
+      "-x": "DDE mode, complete command output (only with -d)",
+      "-y": "DDE mode, confirmations only (only with -d)",
+      "-sg": "Disable uvguix user GUI layout (batch-safe)"
+    },
+    "errorlevel": {
+      "0": "No errors or warnings",
+      "1": "Warnings only",
+      "2": "Errors",
+      "3": "Fatal errors",
+      "11": "Cannot open project file for writing",
+      "12": "Device name not found in database",
+      "13": "Error writing project file",
+      "15": "Error reading import XML",
+      "20": "Error converting project"
+    }
+  },
+  "observed_behaviour": {
+    "bvr_line": "\"<output>\\.axf\" - <N> Error(s), <M> Warning(s).",
+    "timer": "Build Time Elapsed:  HH:MM:SS",
+    "size_line": "Program Size: Code=<n> RO-data=<n> RW-data=<n> ZI-data=<n>",
+    "compile_marker": "compiling <file>...",
+    "assemble_marker": "assembling <file>...",
+    "link_marker": "linking...",
+    "last_command_state": "UV4 rewrites <project>.uvoptx (last target, debug opts) after any command; a lost lock or 'is already opened' message means another instance owns the project.",
+    "side_effects": {
+      "-b/-r/-cr": ["<OutputDirectory>\\*.axf", "*.hex (when CreateHexFile=1)", "*.build_log.htm", "*.htm listing", "<project>\\<target>.dep"],
+      "-c": ["deletes intermediate output files for each target"],
+      "-X": ["<OutputDirectory>\\co-arm_<target>.h|hpp"],
+      "-et/-ep": ["<projectName>.<targetName>.cprj"],
+      "-f": ["flash programming over configured debug adapter"],
+      "-s": ["UVSOCK TCP listener: handshake/sync port pair, service id UVSOCK"]
+    }
+  },
+  "license": {
+    "vendor_daemon": "UV4\\armlm.exe (Arm License Manager), helper armlm-ipc.exe, rpc dll armlm.dll",
+    "legacy": "UV4\\FlexNet\\armlmd.exe, armlmdiag.exe (FlexLM)",
+    "first_stream": "armlm-ipc.exe streams bundled license data (7.4 MB) to armlm.exe; armlm-ipc is the bootstrap/inter-process transport for the local license server",
+    "observable": "UV4.exe imports ARMLM.DLL (DLL name strings present, library absent from PATH at load time unless launched in UV4 dir); toolchain version gates appear as Error #601 'no MDK-ARM license is available' before build.",
+    "env": "No disassembly performed of the license manager binaries in this pass; treat armlm* as black-box and only expose status queries."
+  },
+  "tokens": {
+    "uvsock_strings": ["UVSOCK_Buffer_Mtx", "UVSOCK_Sync_Sem", "UVSOCK=V%d.%d"],
+    "uvsock_classes": ["CUVSOCKGlobals", "CUVSOCKTaskItem", "CUVSOCKVariableContainerItem", "CUVSOCKVariableItem", "CUVSOCKGlobalItem", "CUVSOCKStackFrameItem", "CUVSOCKStackItem", "CUVSOCKWatchItem", "CUVSOCKWatchList", "CUVSOCKConnection", "CUVSOCKServer", "CUVSOCKSignal"]
+  },
+  "evidence": {
+    "cli_matrix": "reverse/cli_matrix.json",
+    "logs": ["reverse/minimal9.log", "reverse/cmd_b.log", "reverse/cmd_r.log", "reverse/cmd_c.log", "reverse/cmd_cr.log"],
+    "rea": ["ev_cba5e15e794a471f201f9b39687fb3196a2f01828e02064ea86fa8ae4931a068", "ev_009fad2b2aa6e40836287b04c186faeffab6f8f4de5f95d09a588505bebc6c28", "ev_84a913958756b7c21d4071b96c91ac2158403ca7161400b6d6ad56ec2b043385", "ev_1f54fa5afa9f64520d3820b66dd348f576e041e59a6e5c2fde38b2b85ecd4ec4"]
+  }
+}

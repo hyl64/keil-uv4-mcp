@@ -1,0 +1,35 @@
+# Byte-exactness matters here: µVision projects and generated artefacts are CRLF
+# files whose bytes the tests compare. Never let git rewrite them.
+* text=auto eol=lf
+
+*.uvprojx text eol=crlf
+*.uvproj  text eol=crlf
+*.uvoptx  text eol=crlf
+*.uvmpw   text eol=crlf
+*.uvguix  text eol=crlf
+*.dep     text eol=crlf
+*.map     text eol=crlf
+*.lnp     text eol=crlf
+*.sct     text eol=crlf
+*.sct     text eol=crlf
+*.BAT     text eol=crlf
+*.hex     text eol=crlf
+*.SVCS    text eol=crlf
+*.prop    text eol=crlf
+*.prop.def text eol=crlf
+*.cdb     text eol=crlf
+
+*.axf     binary
+*.elf     binary
+*.rdi     binary
+*.rea     binary
+*.pack    binary
+*.FLM     binary
+*.bin     binary
+*.o       binary
+*.obj     binary
+
+*.pdsc    text eol=lf
+*.json    text eol=lf
+*.mjs     text eol=lf
+*.md      text eol=lf
