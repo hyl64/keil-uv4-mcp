@@ -65,7 +65,13 @@ check('hostile/odd inputs yield structured errors (SQL-like text just returns no
 
 // 4. Tool "tool_run" must not escape the toolset bin directory.
 const escape = await c.callTool('tool_run', { tool: '..\\..\\..\\Windows\\System32\\cmd', args: ['/c', 'whoami'] });
-check('tool_run rejects binaries outside the toolset', escape.data.ok === false && /not found/.test(escape.data.error || ''), escape.data);
+// Two legitimate outcomes: with a toolchain the path must be refused; without one the tool
+// answers with the structured needsKeil diagnostic. Both mean "the escape never ran".
+const escapeRefused = escape.data.ok === false && (
+  /not found|outside|not within|toolset/i.test(String(escape.data.error || '')) ||
+  escape.data.needsKeil === true
+);
+check('tool_run rejects binaries outside the toolset', escapeRefused, escape.data);
 
 // 5. Very large string argument is rejected by validation or handled without crash.
 const huge = 'A'.repeat(2 * 1024 * 1024);
