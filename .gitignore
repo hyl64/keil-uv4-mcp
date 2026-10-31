@@ -35,3 +35,11 @@ reverse/samples/**/Objects/*.dep2
 reverse/samples/**/*.saved_uv4
 reverse/samples/**/test_rebuild.log
 reverse/samples/**/*.log
+# Per-run logs and dependency databases are rewritten by every build/test run.
+reverse/samples/**/test_rebuild.log
+reverse/samples/**/test_async.log
+reverse/samples/**/test_clean.log
+reverse/samples/**/build.log
+reverse/samples/**/ws.b.log
+reverse/samples/**/Objects/*_Flash.dep
+reverse/samples/**/Objects/regenerated.dep
