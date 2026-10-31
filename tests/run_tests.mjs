@@ -12,7 +12,38 @@ const serverPath = path.join(root, 'src', 'server.mjs');
 const samples = path.join(root, 'reverse', 'samples');
 const minimal = path.join(samples, 'Minimal', 'minimal.uvprojx');
 const gen = path.join(samples, 'Gen2', 'app.uvprojx');
-const blinky = 'C:/Users/ERDAN.DESKTOP-MVAKHCO/AppData/Local/Arm/Packs/Keil/STM32F1xx_DFP/2.4.1/Boards/Keil/MCBSTM32C/Blinky/Blinky.uvprojx';
+// Locate a pack-shipped sample without hard-coding a machine path: the DFP "Blinky" project
+// lives under <packRoot>/Keil/STM32F1xx_DFP/<ver>/Boards/**/Blinky.uvprojx. Pack roots are
+// derived from the environment, so the suite is portable across machines and CI.
+function findBlinky() {
+  const roots = [];
+  if (process.env.LOCALAPPDATA) roots.push(path.join(process.env.LOCALAPPDATA, 'Arm', 'Packs'));
+  roots.push(path.join(root, 'data', 'fixtures', 'Packs'));
+  const seen = new Set();
+  const walk = (dir, depth) => {
+    if (depth > 8 || seen.has(dir)) return null;
+    seen.add(dir);
+    let entries = [];
+    try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch { return null; }
+    for (const e of entries) {
+      const p = path.join(dir, e.name);
+      if (e.isDirectory()) {
+        const hit = walk(p, depth + 1);
+        if (hit) return hit;
+      } else if (/^Blinky\.uvprojx$/i.test(e.name) && /MCBSTM32C/i.test(p)) {
+        return p;
+      }
+    }
+    return null;
+  };
+  for (const r of roots) {
+    const hit = walk(r, 0);
+    if (hit) return hit;
+  }
+  return null;
+}
+const blinky = findBlinky();
+const blinkyDir = blinky ? path.dirname(blinky) : null;
 
 const results = [];
 function check(name, cond, detail) {
@@ -23,6 +54,14 @@ function check(name, cond, detail) {
     catch { extra = '  << (unserializable)'; }
   }
   console.log(`${cond ? 'PASS' : 'FAIL'}  ${name}${extra}`);
+}
+
+// A skipped check is not a pass: it records why the environment cannot answer it, and it is
+// reported separately in the summary so a green run never hides an unverified assertion.
+const skipped = [];
+function skip(name, why) {
+  skipped.push({ name, why });
+  console.log(`SKIP  ${name}  -> ${why}`);
 }
 
 const c = startServer(serverPath);
@@ -41,18 +80,37 @@ try { await c.request('tools/call', { name: 'nope_tool', arguments: {} }); } cat
 check('unknown tool -> JSON-RPC error', !!badName && /Unknown tool/.test(badName.message), badName && badName.message);
 
 // ------------------------------------------------------------------ installation
+// This suite runs on machines with and without MDK. The install-dependent assertions are
+// gated rather than deleted: on a machine with MDK they stay strict, and without one they
+// assert the *honest* outcome (the structured needsKeil diagnostic) instead of pretending.
 const inst = await c.callTool('keil_install', {});
-check('keil_install finds UV4.exe', inst.data.ok && /UV4\.exe$/i.test(inst.data.uv4 || ''), inst.data);
-check('keil_install lists both toolsets (AC6 + AC5)', inst.data.ok && inst.data.toolsets.length >= 2, inst.data.toolsets);
-check('keil_install exposes pack roots', inst.data.ok && inst.data.packRoots.length >= 1, inst.data.packRoots);
-check('keil_install exposes debug drivers from TOOLS.INI', inst.data.ok && inst.data.debugDrivers.length >= 10, inst.data.debugDrivers && inst.data.debugDrivers.length);
+const hasKeil = !!(inst.data && inst.data.ok);
+if (hasKeil) {
+  check('keil_install finds UV4.exe', /UV4\.exe$/i.test(inst.data.uv4 || ''), inst.data);
+  check('keil_install lists both toolsets (AC6 + AC5)', inst.data.toolsets.length >= 2, inst.data.toolsets);
+  check('keil_install exposes pack roots', inst.data.packRoots.length >= 1, inst.data.packRoots);
+  check('keil_install exposes debug drivers from TOOLS.INI', inst.data.debugDrivers.length >= 10, inst.data.debugDrivers && inst.data.debugDrivers.length);
+} else {
+  skip('keil_install finds UV4.exe', 'no MDK on this machine');
+  skip('keil_install lists both toolsets (AC6 + AC5)', 'no MDK on this machine');
+  skip('keil_install exposes pack roots', 'no MDK on this machine');
+  skip('keil_install exposes debug drivers from TOOLS.INI', 'no MDK on this machine');
+  check('keil_install reports the searched roots instead of pretending', Array.isArray(inst.data.candidates) && inst.data.candidates.length >= 3, inst.data);
+}
 
 const tc = await c.callTool('toolchain_versions', { all: true });
-check('toolchain_versions identifies ARM Compiler 5', tc.data.ok && tc.data.toolsets.some(t => t.tools.armcc && /ARM Compiler 5/.test(t.tools.armcc.component || '')), tc.data);
-check('toolchain_versions identifies ARM Compiler 6', tc.data.ok && tc.data.toolsets.some(t => t.tools.armclang && /6\.\d+/.test(t.tools.armclang.component || '')), tc.data);
+if (hasKeil) {
+  check('toolchain_versions identifies ARM Compiler 5', tc.data.ok && tc.data.toolsets.some(t => t.tools.armcc && /ARM Compiler 5/.test(t.tools.armcc.component || '')), tc.data);
+  check('toolchain_versions identifies ARM Compiler 6', tc.data.ok && tc.data.toolsets.some(t => t.tools.armclang && /6\.\d+/.test(t.tools.armclang.component || '')), tc.data);
+} else {
+  skip('toolchain_versions identifies ARM Compiler 5', 'no MDK on this machine');
+  skip('toolchain_versions identifies ARM Compiler 6', 'no MDK on this machine');
+  check('toolchain_versions degrades to a needsKeil diagnostic', tc.data.needsKeil === true && !!tc.data.remedy, tc.data);
+}
 
 const run = await c.callTool('tool_run', { tool: 'armcc', args: ['--vsn'] });
-check('tool_run executes armcc directly', run.data.ok && /ARM Compiler/.test(run.data.stdout || ''), run.data);
+if (hasKeil) check('tool_run executes armcc directly', run.data.ok && /ARM Compiler/.test(run.data.stdout || ''), run.data);
+else check('tool_run degrades to a needsKeil diagnostic', run.data.needsKeil === true, run.data);
 
 // ------------------------------------------------------------------ project model
 const pr = await c.callTool('project_read', { project: minimal, includeFiles: false });
@@ -60,8 +118,12 @@ check('project_read parses the target', pr.data.ok && pr.data.targets.length ===
 check('project_read exposes the memory model', pr.data.ok && pr.data.targets[0].misc.memory.IROM.start === '0x8000000', pr.data.targets && pr.data.targets[0].misc.memory);
 const pf = await c.callTool('project_files', { project: minimal });
 check('project_files lists startup.S + main.c', pf.data.ok && pf.data.files.length === 2 && pf.data.files.every(f => f.exists), pf.data);
-const bl = await c.callTool('project_read', { project: blinky, target: 'STM32F107 Flash' });
-check('RTE components parsed for a real pack project', bl.data.ok && bl.data.targets[0].rte.components.length >= 4, bl.data.targets && bl.data.targets[0].rte);
+if (blinky) {
+  const bl = await c.callTool('project_read', { project: blinky, target: 'STM32F107 Flash' });
+  check('RTE components parsed for a real pack project', bl.data.ok && bl.data.targets[0].rte.components.length >= 4, bl.data.targets && bl.data.targets[0].rte);
+} else {
+  skip('RTE components parsed for a real pack project', 'no DFP Blinky project on this machine');
+}
 const val = await c.callTool('project_validate', { project: gen });
 check('project_validate accepts the generated project', val.data.ok === true, val.data.issues);
 const diff = await c.callTool('project_diff', { left: minimal, right: gen });
@@ -121,9 +183,13 @@ check('flash driver identical to UV4 migration output', detail.data.ok && detail
 check('SVD + register header identical to UV4', detail.data.targetOptions.svd === frag('SFDFile') && detail.data.targetOptions.registerFile === frag('RegisterFile'), detail.data.targetOptions);
 const comps = await c.callTool('pack_components', { query: 'StdPeriph' });
 check('pack_components lists StdPeriph drivers', comps.data.ok && comps.data.components.length >= 5, comps.data);
-const rteVal = await c.callTool('pack_rte_validate', { project: blinky, target: 'STM32F107 Flash' });
-// UV4 reports the same project as #540 (RTX component) plus #542 (missing Board Support APIs).
-check('pack_rte_validate flags unavailable RTE components (#540)', rteVal.data.ok === false && rteVal.data.issues.some(i => i.code === 540 && /RTX/.test(i.component || '')), rteVal.data.issues);
+if (blinky) {
+  const rteVal = await c.callTool('pack_rte_validate', { project: blinky, target: 'STM32F107 Flash' });
+  // UV4 reports the same project as #540 (RTX component) plus #542 (missing Board Support APIs).
+  check('pack_rte_validate flags unavailable RTE components (#540)', rteVal.data.ok === false && rteVal.data.issues.some(i => i.code === 540 && /RTX/.test(i.component || '')), rteVal.data.issues);
+} else {
+  skip('pack_rte_validate flags unavailable RTE components (#540)', 'no DFP Blinky project on this machine');
+}
 
 // ------------------------------------------------------------------ images
 // Images are rebuilt at the start of the run so the ELF/MAP/HEX checks always see fresh artefacts.
