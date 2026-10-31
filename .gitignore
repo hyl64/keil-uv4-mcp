@@ -19,3 +19,19 @@ desktop.ini
 
 # The fixture snapshot is the product — never ignore it.
 !data/fixtures/**
+
+# ---- build intermediates produced by the acceptance run (regenerated on demand) ----
+# Object files, listing artefacts and per-run logs. The *inputs* (.uvprojx/.c/.s/.dep/
+# .sct/.lnp/.BAT/.axf/.map/.hex) stay tracked: the tests and the fixture snapshot need them.
+reverse/samples/**/Objects/*.o
+reverse/samples/**/Objects/*.htm
+reverse/samples/**/Objects/*.build_log.htm
+reverse/samples/**/Objects/.*.d
+reverse/samples/**/Listings/*.htm
+reverse/samples/**/Listings/*.lst
+reverse/samples/**/*.build_log.htm
+reverse/samples/**/Objects/*.crf
+reverse/samples/**/Objects/*.dep2
+reverse/samples/**/*.saved_uv4
+reverse/samples/**/test_rebuild.log
+reverse/samples/**/*.log

@@ -83,9 +83,17 @@ export function parseDep(text) {
 export function parseCompilerDep(text) {
   const pairs = [];
   for (const line of text.split(/\r?\n/)) {
-    const m = /^(.*):\s?(\S.*)$/.exec(line);
-    if (!m) continue;
-    pairs.push({ target: m[1].trim(), dependency: m[2].trim() });
+    if (!line.trim()) continue;
+    // "<object>: <dependency>". Split on the FIRST separator: the object path may carry a
+    // drive colon ("D:\a\obj.o"), and a greedy /(.*):/ eats it, returning "\Users\..." and
+    // silently dropping the drive letter from every dependency on a non-C: checkout.
+    let i = line.indexOf(': ');
+    if (i < 0) i = line.indexOf(':');
+    if (i < 0) continue;
+    const target = line.slice(0, i).trim();
+    const dependency = line.slice(i + 1).trim();
+    if (!target || !dependency) continue;
+    pairs.push({ target, dependency });
   }
   return pairs;
 }

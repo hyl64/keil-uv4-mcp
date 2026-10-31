@@ -13,6 +13,6 @@ linking...
 Program Size: Code=376 RO-data=268 RW-data=8 ZI-data=1632  
 FromELF: creating hex file...
 ".\Objects\app.axf" - 0 Error(s), 0 Warning(s).
-Build Time Elapsed:  00:00:01
+Build Time Elapsed:  00:00:00
   
-Batch-Build summary: 2 succeeded, 0 failed, 0 skipped - Time Elapsed: 00:00:02
+Batch-Build summary: 2 succeeded, 0 failed, 0 skipped - Time Elapsed: 00:00:01
